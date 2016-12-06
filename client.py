@@ -5,7 +5,7 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.treeview import TreeView, TreeViewLabel
+from kivy.uix.treeview import TreeView, TreeViewLabel, TreeViewNode
 from kivy.uix.scrollview import ScrollView
 
 import requests
@@ -20,6 +20,9 @@ class Config:
     @staticmethod
     def endpoint_session(endpoint):
         return "http://"+Config.server_ip+":8080/session/"+Config.session_id+"/"+endpoint
+
+class TreeViewTextInput(TextInput,TreeViewNode):
+    pass
 
 class ElementsScreen( Screen ):
     def __init__(self, **kwargs ):
@@ -57,8 +60,8 @@ class ElementsScreen( Screen ):
         xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
         print(xpath_req.json())
         for el in xpath_req.json()["data"]:
-            node = self.query_response.add_node( TreeViewLabel(text=el[webelement_key_id], is_open=True) )
-            self.query_response.add_node( TreeViewLabel(text=el["name"]) , node )
+            node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True, height=40) )
+            self.query_response.add_node( TreeViewTextInput(text=el["name"], height=40), node )
 
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
