@@ -6,6 +6,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.treeview import TreeView, TreeViewLabel
+from kivy.uix.scrollview import ScrollView
 
 import requests
 import json
@@ -42,9 +43,13 @@ class ElementsScreen( Screen ):
         #query label
         query_response_label = Label( text="Response results", height=height, size_hint=(1,None) )
         layout.add_widget( query_response_label )
+        #scroll view
+        scrollView = ScrollView( size_hint=(1,0.5) )
+        layout.add_widget( scrollView )
         #query response area
-        self.query_response = TreeView(height=200, size_hint=(1,None), root_options={'text':'Results'} )
-        layout.add_widget( self.query_response )
+        self.query_response = TreeView(size_hint=(1,None), root_options={'text':'Results'} )
+        self.query_response.bind(minimum_height= self.query_response.setter('height') )
+        scrollView.add_widget( self.query_response )
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
