@@ -58,10 +58,12 @@ class ElementsScreen( Screen ):
         layout.add_widget( self.query_button )
         self.query_button.bind( on_press = self.run_query_callback )
         #query label
-        query_response_label = Label( text="Response results", height=height, size_hint=(1,None) )
+        query_response_label = Label( text="Response results", height=height, size_hint=(0.5, None) )
         layout.add_widget( query_response_label )
+        #test case label
+        layout.add_widget( Label( text="Current test case", height=height, size_hint=(0.5, None) ) )
         #scroll view
-        scrollView = ScrollView( size_hint=(1,0.5) )
+        scrollView = ScrollView( size_hint=(0.5, 0.5) )
         layout.add_widget( scrollView )
         #query response area
         self.query_response = TreeView(size_hint=(1,None), root_options={'text':'Results'} )
