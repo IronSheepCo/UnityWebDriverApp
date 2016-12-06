@@ -26,6 +26,9 @@ class TreeViewTextInput(TextInput,TreeViewNode):
         super( TreeViewTextInput, self ).__init__(**kwargs)
         self.readonly = True
         self.multiline = False
+        self.border = (0, 0, 0, 0)
+        self.background_color = (0,0,0,0)
+        self.height = 30
         self.bind( on_double_tap = self.copy_to_clipboard )
 
     def copy_to_clipboard(self, instance):
@@ -68,8 +71,8 @@ class ElementsScreen( Screen ):
         xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
         print(xpath_req.json())
         for el in xpath_req.json()["data"]:
-            node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True, height=40, multiline=False, readonly=True) )
-            self.query_response.add_node( TreeViewTextInput(text=el["name"], height=40, multiline=False, readonly=True), node )
+            node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True ) )
+            self.query_response.add_node( TreeViewTextInput(text=el["name"], multiline=False), node )
 
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
