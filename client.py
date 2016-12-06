@@ -33,7 +33,7 @@ class ElementsScreen( Screen ):
         xpath_label = Label( text="XPath query", height=height, size_hint=(0.5, None) )
         layout.add_widget( xpath_label )
         #adding text input
-        self.xpath_query = TextInput( multiline=False, height=height, size_hint=(0.5, None) )
+        self.xpath_query = TextInput( multiline=False, height=height, size_hint=(0.5, None), text="//uibutton" )
         layout.add_widget( self.xpath_query )
         #adding button
         self.query_button = Button( text="Run query", height=height, size_hint=(1, None) )
