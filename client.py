@@ -43,7 +43,7 @@ class ElementsScreen( Screen ):
         query_response_label = Label( text="Response results", height=height, size_hint=(1,None) )
         layout.add_widget( query_response_label )
         #query response area
-        self.query_response = TreeView(height=200, size_hint=(1,None), hide_root=True)
+        self.query_response = TreeView(height=200, size_hint=(1,None), root_options={'text':'Results'} )
         layout.add_widget( self.query_response )
 
     def run_query_callback(self, instance):
