@@ -73,6 +73,13 @@ class ElementsScreen( Screen ):
         payload = {"using":"xpath","value":self.xpath_query.text}
         xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
         print(xpath_req.json())
+        #clean the tree view
+        nodes = []
+        for node in self.query_response.iterate_all_nodes():
+            nodes.append( node )
+        for node in nodes:
+            self.query_response.remove_node( node )
+        #populate the tree view
         for el in xpath_req.json()["data"]:
             node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True ) )
             self.query_response.add_node( TreeViewTextInput(text=el["name"], multiline=False), node )
