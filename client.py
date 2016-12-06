@@ -22,7 +22,15 @@ class Config:
         return "http://"+Config.server_ip+":8080/session/"+Config.session_id+"/"+endpoint
 
 class TreeViewTextInput(TextInput,TreeViewNode):
-    pass
+    def __init__(self, **kwargs):
+        super( TreeViewTextInput, self ).__init__(**kwargs)
+        self.readonly = True
+        self.multiline = False
+        self.bind( on_double_tap = self.copy_to_clipboard )
+
+    def copy_to_clipboard(self, instance):
+        print('copied to clipboard')
+        self.copy( data=self.text )
 
 class ElementsScreen( Screen ):
     def __init__(self, **kwargs ):
@@ -60,8 +68,8 @@ class ElementsScreen( Screen ):
         xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
         print(xpath_req.json())
         for el in xpath_req.json()["data"]:
-            node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True, height=40) )
-            self.query_response.add_node( TreeViewTextInput(text=el["name"], height=40), node )
+            node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True, height=40, multiline=False, readonly=True) )
+            self.query_response.add_node( TreeViewTextInput(text=el["name"], height=40, multiline=False, readonly=True), node )
 
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
