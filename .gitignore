@@ -2,3 +2,4 @@
 client.spec
 /build
 /dist
+/tmp
