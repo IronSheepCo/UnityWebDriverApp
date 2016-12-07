@@ -9,6 +9,9 @@ class Config:
         return "http://"+Config.server_ip+":8080/session/"+Config.session_id+"/"+endpoint
 
 class Command:
-    def click(self, uuid):
-        pass
-      # requests.post( 
+    @staticmethod
+    def click(uuid):
+        endpoint = 'element/'+uuid+'/click'
+        print(endpoint)
+        response = requests.get( Config.endpoint_session(endpoint) )
+        print( response.json() )

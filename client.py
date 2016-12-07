@@ -15,8 +15,6 @@ from tech.ironsheep.webdriver.command import Config, Command
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
-
-
 class TreeViewTextInput(TextInput,TreeViewNode):
     def __init__(self, **kwargs):
         super( TreeViewTextInput, self ).__init__(**kwargs)
@@ -78,6 +76,7 @@ class ElementsScreen( Screen ):
 
     def pressed_click(self, instance):
         print('clicking element '+self.text_uuid.text)
+        Command.click( self.text_uuid.text )
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
