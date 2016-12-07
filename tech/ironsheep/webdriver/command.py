@@ -1,4 +1,5 @@
 import requests
+import json
 
 class Config:
     @staticmethod
@@ -14,4 +15,19 @@ class Command:
         endpoint = 'element/'+uuid+'/click'
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
+        print( response.json() )
+    
+    @staticmethod
+    def attribute(uuid,name):
+        endpoint = 'element/'+uuid+'/attribute/'+name
+        print(endpoint)
+        response = requests.get( Config.endpoint_session(endpoint) )
+        print( response.json() )
+
+    @staticmethod
+    def send_keys(uuid, keys):
+        endpoint = 'element/'+uuid+'/value'
+        print(endpoint)
+        payload = {'text':keys}
+        response = requests.post( Config.endpoint_session(endpoint), json=payload )
         print( response.json() )

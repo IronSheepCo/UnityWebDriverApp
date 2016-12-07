@@ -98,10 +98,12 @@ class ElementsScreen( Screen ):
         Command.click( self.text_uuid.text )
 
     def pressed_attribute(self, instance):
-        print('getting attribute ')
+        print('getting attribute '+self.extra_param.text)
+        Command.attribute( self.text_uuid.text, self.extra_param.text)
 
     def pressed_send_keys(self, instance):
-        print('sending keys ')
+        print('sending keys '+self.extra_param.text)
+        Command.send_keys( self.text_uuid.text, self.extra_param.text)
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
