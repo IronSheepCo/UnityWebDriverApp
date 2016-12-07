@@ -66,17 +66,42 @@ class ElementsScreen( Screen ):
         #test area
         test_label = Label( text="Test zone", height=height, size_hint=(1.0, None) )
         layout.add_widget( test_label )
+        #uuid label
+        uuid_label = Label( text="UUID", height=height, size_hint=(0.1, None), halign='left', valign='middle' )
+        uuid_label.bind(size=uuid_label.setter('text_size'))
+        layout.add_widget( uuid_label )
         #test uid
-        self.text_uuid = TextInput( text="UUID", height=height, multiline=False, size_hint=(0.5, None) )
+        self.text_uuid = TextInput( height=height, multiline=False, size_hint=(0.4, None) )
         layout.add_widget( self.text_uuid )
         #button for click
-        click_button = Button( text="Click", height = height, size_hint=(0.25, None) )
+        click_button = Button( text="Click", height = height, size_hint=(0.15, None) )
         click_button.bind( on_press=self.pressed_click)
         layout.add_widget( click_button )
-
+        #button for get attribute
+        attribute_button = Button( text="Attribute", height = height, size_hint=(0.15, None) )
+        attribute_button.bind( on_press=self.pressed_attribute )
+        layout.add_widget( attribute_button )
+        #button for sending keys
+        send_keys_button = Button( text="Send keys", height = height, size_hint=(0.15, None) )
+        send_keys_button.bind( on_press=self.pressed_send_keys )
+        layout.add_widget( send_keys_button )
+        #area for extra param
+        extra_label = Label( text="Extra param", height=height, size_hint=(0.1, None), halign='left', valign='middle' )
+        extra_label.bind( size=extra_label.setter('text_size') )
+        layout.add_widget( extra_label )
+        #test extra param
+        self.extra_param = TextInput( height=height, multiline=False, size_hint=(0.4, None) )
+        layout.add_widget( self.extra_param )
+    
     def pressed_click(self, instance):
         print('clicking element '+self.text_uuid.text)
         Command.click( self.text_uuid.text )
+
+    def pressed_attribute(self, instance):
+        print('getting attribute ')
+
+    def pressed_send_keys(self, instance):
+        print('sending keys ')
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
