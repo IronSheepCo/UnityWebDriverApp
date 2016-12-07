@@ -11,15 +11,11 @@ from kivy.uix.scrollview import ScrollView
 import requests
 import json
 
+from tech.ironsheep.webdriver.command import Config, Command
+
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
-class Config:
-    @staticmethod
-    def endpoint(endpoint):
-        return "http://"+Config.server_ip+":8080/"+endpoint
-    @staticmethod
-    def endpoint_session(endpoint):
-        return "http://"+Config.server_ip+":8080/session/"+Config.session_id+"/"+endpoint
+
 
 class TreeViewTextInput(TextInput,TreeViewNode):
     def __init__(self, **kwargs):
