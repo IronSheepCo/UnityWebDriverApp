@@ -16,6 +16,7 @@ class Command:
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
+        return response.json()
     
     @staticmethod
     def attribute(uuid,name):
@@ -23,6 +24,7 @@ class Command:
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
+        return response.json()
 
     @staticmethod
     def send_keys(uuid, keys):
@@ -31,3 +33,13 @@ class Command:
         payload = {'text':keys}
         response = requests.post( Config.endpoint_session(endpoint), json=payload )
         print( response.json() )
+        return response.json()
+    
+    @staticmethod
+    def name(uuid):
+        endpoint = 'element/'+uuid+'/name'
+        print(endpoint)
+        response = requests.get( Config.endpoint_session(endpoint) )
+        print( response.json() )
+        return response.json()
+    
