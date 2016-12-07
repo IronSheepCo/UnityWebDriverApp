@@ -100,6 +100,9 @@ class ElementsScreen( Screen ):
         get_text_button = Button( text="Text", height = height, size_hint=(0.15, None) )
         get_text_button.bind( on_press=self.pressed_get_text )
         layout.add_widget( get_text_button )
+        #response area
+        self.response_area = TextInput( height=2*height, size_hint=(1, None) )
+        layout.add_widget( self.response_area )
     
     def pressed_click(self, instance):
         print('clicking element '+self.text_uuid.text)
@@ -114,11 +117,17 @@ class ElementsScreen( Screen ):
         Command.send_keys( self.text_uuid.text, self.extra_param.text)
 
     def pressed_get_text(self, instance):
-        Command.attribute( self.text_uuid.text, 'text' )
+        response = Command.attribute( self.text_uuid.text, 'text' )
+        if response["data"] != None:
+            self.response_area.text = response["data"]
 
     def pressed_get_name(self, instance):
         print('getting name '+self.text_uuid.text)
-        Command.name( self.text_uuid.text )
+        
+        response = Command.name( self.text_uuid.text )
+        
+        if response["data"] != None:
+            self.response_area.text = response["data"]
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
