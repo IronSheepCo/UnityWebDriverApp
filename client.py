@@ -42,7 +42,7 @@ class ElementsScreen( Screen ):
     def __init__(self, **kwargs ):
         super( ElementsScreen, self).__init__(**kwargs)
         layout = StackLayout()
-        height = 40
+        height = 30
         self.add_widget( layout )
         #adding connect label
         self.label = Label( height=height, size_hint=(1, None) )
@@ -69,6 +69,19 @@ class ElementsScreen( Screen ):
         self.query_response = TreeView(size_hint=(1,None), root_options={'text':'Results'} )
         self.query_response.bind(minimum_height= self.query_response.setter('height') )
         scrollView.add_widget( self.query_response )
+        #test area
+        test_label = Label( text="Test zone", height=height, size_hint=(1.0, None) )
+        layout.add_widget( test_label )
+        #test uid
+        self.text_uuid = TextInput( text="UUID", height=height, multiline=False, size_hint=(0.5, None) )
+        layout.add_widget( self.text_uuid )
+        #button for click
+        click_button = Button( text="Click", height = height, size_hint=(0.25, None) )
+        click_button.bind( on_press=self.pressed_click)
+        layout.add_widget( click_button )
+
+    def pressed_click(self, instance):
+        print('clicking element '+self.text_uuid.text)
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
