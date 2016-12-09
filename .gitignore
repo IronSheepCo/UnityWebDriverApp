@@ -1,7 +1,6 @@
 *.swp
 *.swo
 *.pyc
-client.spec
 /build
 /dist
 /tmp
