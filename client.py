@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.treeview import TreeView, TreeViewLabel, TreeViewNode
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
+from kivy.lang import Builder
 
 import requests
 import json
@@ -154,21 +155,9 @@ class ElementsScreen( Screen ):
 
 
 class ConnectScreen( Screen ):
-    def __init__(self, **kwargs):
-        super(ConnectScreen, self).__init__(**kwargs)
-        layout = StackLayout()
-        height = 40
-        layout.add_widget(Label(text='Server IP', height=height, size_hint=(0.5, None)))
-        self.ip = TextInput(multiline=False, height=height, size_hint=(0.5, None), text="127.0.0.1" )
-        layout.add_widget( self.ip )
-        self.connect_button = Button(text='Connect', height=height, size_hint=(1.0, None) )
-        layout.add_widget( self.connect_button  )
-        self.connect_button.bind( on_press = self.connect_callback )
-        self.add_widget( layout )
-
-
     def connect_callback(self, instance):
-        Config.server_ip = self.ip.text
+        Config.server_ip = self.ids["ip"].text
+        print("clicked here")
         try:
             status_req = requests.get( Config.endpoint("status") )
             session_ready = status_req.json()["ready"]
@@ -190,7 +179,9 @@ class ConnectScreen( Screen ):
 class WebDriverApp(App):
     def build(self):
         self.sm = ScreenManager()
-        self.sm.add_widget( ConnectScreen(name="connect") )
+
+        #self.sm.add_widget( ConnectScreen(name="connect") )
+        self.sm.add_widget( Builder.load_file("connect_screen.kv") )
         self.sm.add_widget( ElementsScreen(name="elements") ) 
         return self.sm
 

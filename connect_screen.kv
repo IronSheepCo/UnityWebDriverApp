@@ -1,0 +1,23 @@
+#:kivy 1.0
+
+#:set height 40
+
+ConnectScreen:
+    name:"connect"
+    
+    StackLayout:
+        Label:
+            text:"Server ip"
+            height:height
+            size_hint: 0.5, None
+        TextInput:
+            id: ip
+            height:height
+            multiline: False
+            size_hint: 0.5, None
+            text: "127.0.0.1"
+        Button
+            height:height
+            size_hint: 1.0, None
+            text:"Connect"
+            on_press:root.connect_callback(self) 
