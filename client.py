@@ -12,6 +12,7 @@ from kivy.lang import Builder
 
 import requests
 import json
+import sys
 
 from tech.ironsheep.webdriver.command import Config, Command
 
@@ -178,6 +179,10 @@ class ConnectScreen( Screen ):
 
 class WebDriverApp(App):
     def build(self):
+
+        if getattr(sys, 'frozen', False):
+                os.chdir(sys._MEIPASS)
+
         self.sm = ScreenManager()
 
         #self.sm.add_widget( ConnectScreen(name="connect") )
