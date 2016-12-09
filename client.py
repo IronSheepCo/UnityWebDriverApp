@@ -7,6 +7,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.treeview import TreeView, TreeViewLabel, TreeViewNode
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.popup import Popup
 
 import requests
 import json
@@ -168,19 +169,23 @@ class ConnectScreen( Screen ):
 
     def connect_callback(self, instance):
         Config.server_ip = self.ip.text
-        status_req = requests.get( Config.endpoint("status") )
-        session_ready = status_req.json()["ready"]
-        print( session_ready )
-        if session_ready == False :
-            print("DELETING SESSION")
-            delete_session_req = requests.delete( Config.endpoint("session") )
-            print( delete_session_req.json() )
-        
-        session_req = requests.post( Config.endpoint("session") )
-        Config.session_id = session_req.json()["sessionId"]
-        print("using session id "+Config.session_id)
-        
-        self.manager.current = 'elements'
+        try:
+            status_req = requests.get( Config.endpoint("status") )
+            session_ready = status_req.json()["ready"]
+            print( session_ready )
+            if session_ready == False :
+                print("DELETING SESSION")
+                delete_session_req = requests.delete( Config.endpoint("session") )
+                print( delete_session_req.json() )
+            
+            session_req = requests.post( Config.endpoint("session") )
+            Config.session_id = session_req.json()["sessionId"]
+            print("using session id "+Config.session_id)
+            
+            self.manager.current = 'elements'
+        except Exception:
+            popup = Popup( title="Error", content=Label(text="No server connection at specified ip"), size_hint=(None,None), size=(300,200) )
+            popup.open()
 
 class WebDriverApp(App):
     def build(self):
