@@ -9,6 +9,7 @@ from kivy.uix.treeview import TreeView, TreeViewLabel, TreeViewNode
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
+from kivy.properties import ObjectProperty
 
 import requests
 import json
@@ -36,79 +37,11 @@ class TreeViewTextInput(TextInput,TreeViewNode):
         self.copy( data=self.text )
 
 class ElementsScreen( Screen ):
-    def __init__(self, **kwargs ):
-        super( ElementsScreen, self).__init__(**kwargs)
-        layout = StackLayout()
-        height = 30
-        self.add_widget( layout )
-        #adding connect label
-        self.label = Label( height=height, size_hint=(1, None) )
-        layout.add_widget( self.label )
-        #adding xpath query
-        xpath_label = Label( text="XPath query", height=height, size_hint=(0.5, None) )
-        layout.add_widget( xpath_label )
-        #adding text input
-        self.xpath_query = TextInput( multiline=False, height=height, size_hint=(0.5, None), text="//uibutton" )
-        layout.add_widget( self.xpath_query )
-        #adding button
-        self.query_button = Button( text="Run query", height=height, size_hint=(1, None) )
-        layout.add_widget( self.query_button )
-        self.query_button.bind( on_press = self.run_query_callback )
-        #query label
-        query_response_label = Label( text="Response results", height=height, size_hint=(0.5, None) )
-        layout.add_widget( query_response_label )
-        #test case label
-        layout.add_widget( Label( text="Current test case", height=height, size_hint=(0.5, None) ) )
-        #scroll view
-        scrollView = ScrollView( size_hint=(0.5, 0.5) )
-        layout.add_widget( scrollView )
-        #query response area
-        self.query_response = TreeView(size_hint=(1,None), root_options={'text':'Results'} )
-        self.query_response.bind(minimum_height= self.query_response.setter('height') )
-        scrollView.add_widget( self.query_response )
-        #test area
-        test_label = Label( text="Test zone", height=height, size_hint=(1.0, None) )
-        layout.add_widget( test_label )
-        #uuid label
-        uuid_label = Label( text="UUID", height=height, size_hint=(0.1, None), halign='left', valign='middle' )
-        uuid_label.bind(size=uuid_label.setter('text_size'))
-        layout.add_widget( uuid_label )
-        #test uid
-        self.text_uuid = TextInput( height=height, multiline=False, size_hint=(0.4, None) )
-        layout.add_widget( self.text_uuid )
-        #button for click
-        click_button = Button( text="Click", height = height, size_hint=(0.15, None) )
-        click_button.bind( on_press=self.pressed_click)
-        layout.add_widget( click_button )
-        #button for get attribute
-        attribute_button = Button( text="Attribute", height = height, size_hint=(0.15, None) )
-        attribute_button.bind( on_press=self.pressed_attribute )
-        layout.add_widget( attribute_button )
-        #button for sending keys
-        send_keys_button = Button( text="Send keys", height = height, size_hint=(0.15, None) )
-        send_keys_button.bind( on_press=self.pressed_send_keys )
-        layout.add_widget( send_keys_button )
-        #area for extra param
-        extra_label = Label( text="Extra param", height=height, size_hint=(0.1, None), halign='left', valign='middle' )
-        extra_label.bind( size=extra_label.setter('text_size') )
-        layout.add_widget( extra_label )
-        #test extra param
-        self.extra_param = TextInput( height=height, multiline=False, size_hint=(0.4, None) )
-        layout.add_widget( self.extra_param )
-        #button for getting name
-        get_name_button = Button( text="Name", height = height, size_hint=(0.15, None) )
-        get_name_button.bind( on_press=self.pressed_get_name )
-        layout.add_widget( get_name_button )
-        #button for getting text
-        get_text_button = Button( text="Text", height = height, size_hint=(0.15, None) )
-        get_text_button.bind( on_press=self.pressed_get_text )
-        layout.add_widget( get_text_button )
-        #response label
-        response_label = Label( text="Response", height=height, size_hint=(1,None) )
-        layout.add_widget( response_label )
-        #response area
-        self.response_area = TextInput( height=2*height, size_hint=(1, None) )
-        layout.add_widget( self.response_area )
+    label = ObjectProperty(None)
+    xpath_query = ObjectProperty(None)
+    text_uuid = ObjectProperty(None)
+    extra_param = ObjectProperty(None)
+    response_area = ObjectProperty(None)
     
     def pressed_click(self, instance):
         print('clicking element '+self.text_uuid.text)
@@ -153,6 +86,7 @@ class ElementsScreen( Screen ):
 
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
+        self.query_response.bind(minimum_height=self.query_response.setter('height') )
 
 
 class ConnectScreen( Screen ):
@@ -185,9 +119,8 @@ class WebDriverApp(App):
 
         self.sm = ScreenManager()
 
-        #self.sm.add_widget( ConnectScreen(name="connect") )
         self.sm.add_widget( Builder.load_file("connect_screen.kv") )
-        self.sm.add_widget( ElementsScreen(name="elements") ) 
+        self.sm.add_widget( Builder.load_file("elements_screen.kv") )
         return self.sm
 
     def on_stop(self):

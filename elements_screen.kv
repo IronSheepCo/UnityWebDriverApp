@@ -1,0 +1,128 @@
+#:kivy 1.0
+
+#:set height 30
+
+ElementsScreen:
+    
+    name:"elements"
+    
+    label: label
+    xpath_query: xpath_query
+    query_response: query_response
+    text_uuid: text_uuid  
+    extra_param: extra_param 
+    response_area: response_area
+ 
+    StackLayout:
+        
+        Label:
+            id:label
+            height:height
+            size_hint:1, None
+
+        Label:
+            text:"XPath query"
+            height:height
+            size_hint:0.5, None
+        
+        TextInput:
+            id:xpath_query
+            text:"//uibutton"
+            multiline:False
+            height:height
+            size_hint:0.5, None
+
+        Button:
+            id:query_button
+            text:"Run query"
+            height:height
+            size_hint:1, None
+            on_press:root.run_query_callback(self)
+        
+        Label:
+            text:"Response results"
+            height:height
+            size_hint:0.5, None
+
+        Label:
+            text:"Current test case"
+            height:height
+            size_hint:0.5, None
+
+        ScrollView:
+            size_hint:0.5, 0.5
+            
+            TreeView:
+                id:query_response
+                size_hint:1, None
+                root_options: {'text':'Result'}
+
+        Label:
+            text:"Test zone"
+            height:height
+            size_hint:1, None
+           
+        Label:
+            text:"UUID"
+            height:height
+            size_hint:0.1, None
+            halign:"left"
+            valign:"middle"
+
+        TextInput:
+            id:text_uuid
+            height:height
+            multiline:False
+            size_hint:0.4, None
+
+        Button:
+            text:"Click"
+            height:height
+            size_hint:0.15, None
+            on_press:root.pressed_click(self)
+
+        Button:
+            text:"Attribute"
+            height:height
+            size_hint:0.15, None
+            on_press:root.pressed_attribute(self)
+
+        Button:
+            text:"Send keys"
+            height:height
+            size_hint:0.15, None
+            on_press:root.pressed_send_keys(self)
+
+        Label:
+            text:"Extra param"
+            height:height
+            size_hint:0.1, None
+            halign:"left"
+            valign:"middle"
+
+        TextInput:
+            id:extra_param
+            height:height
+            size_hint:0.4, None
+
+        Button:
+            text:"Name"
+            height:height
+            size_hint:0.15, None
+            on_press:root.pressed_get_name(self)
+
+        Button:
+            text:"Text"
+            height:height
+            size_hint:0.15, None
+            on_press:root.pressed_get_text(self)
+
+        Label:
+            text:"Response"
+            height:height
+            size_hint:1, None
+        
+        TextInput:
+            id:response_area
+            height:2*height
+            size_hint:1, None
