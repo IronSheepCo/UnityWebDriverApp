@@ -100,6 +100,9 @@ class ElementsScreen( Screen ):
         get_text_button = Button( text="Text", height = height, size_hint=(0.15, None) )
         get_text_button.bind( on_press=self.pressed_get_text )
         layout.add_widget( get_text_button )
+        #response label
+        response_label = Label( text="Response", height=height, size_hint=(1,None) )
+        layout.add_widget( response_label )
         #response area
         self.response_area = TextInput( height=2*height, size_hint=(1, None) )
         layout.add_widget( self.response_area )
