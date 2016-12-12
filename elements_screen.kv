@@ -57,6 +57,35 @@ ElementsScreen:
                 size_hint:1, None
                 root_options: {'text':'Result'}
 
+        TestCaseView:
+            id:test_case_view
+            test_case_list:test_case_list
+            size_hint:0.5, 0.5
+
+            StackLayout:
+                size_hint:1, 1
+
+                BoxLayout:
+                    orientation:'horizontal'
+                    height:height
+                    size_hint:1, None
+
+                    Button:
+                        text:'Load test'
+                        on_press:test_case_view.load_test_pressed(self)
+                        
+                    Button:
+                        text:'Save test'
+                        on_press:test_case_view.save_test_pressed(self)
+
+                    Button:
+                        text:'+ Add step'
+                        on_press:test_case_view.add_step(self)
+
+                TreeView:
+                    id:test_case_list
+                    size_hint:1, None
+                        
         Label:
             text:"Test zone"
             height:height

@@ -19,6 +19,22 @@ from tech.ironsheep.webdriver.command import Config, Command
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
+
+class TestCaseView(ScrollView):
+    test_case_list = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super(TestCaseView, self).__init__(**kwargs)
+
+    def load_test_pressed(self, instance):
+        print("loading test case")
+
+    def save_test_pressed(self, instance):
+        print("saving test case")
+
+    def add_step(self, instance):
+        print("adding step")
+
 class TreeViewTextInput(TextInput,TreeViewNode):
     def __init__(self, **kwargs):
         super( TreeViewTextInput, self ).__init__(**kwargs)
@@ -35,6 +51,8 @@ class TreeViewTextInput(TextInput,TreeViewNode):
     def copy_to_clipboard(self, instance):
         print('copied to clipboard')
         self.copy( data=self.text )
+
+
 
 class ElementsScreen( Screen ):
     label = ObjectProperty(None)
