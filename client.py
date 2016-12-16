@@ -34,8 +34,7 @@ class TestCaseView(ScrollView):
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
 
-    def on_enter(self):
-        print("aici -----------------")
+    def on_test_case_list(self, instance, value):
         self.test_case_list.bind(minimum_height=self.test_case_list.setter('height') )
     
     def load_test_pressed(self, instance):
