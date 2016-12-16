@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
@@ -19,6 +20,13 @@ from tech.ironsheep.webdriver.command import Config, Command
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
+class TestCaseEntry(StackLayout, TreeViewNode):
+    def __init__(self, **kwargs):
+        super(TestCaseEntry, self).__init__(**kwargs)
+
+    @staticmethod
+    def load():
+        return Builder.load_file('test_case_entry.kv')
 
 class TestCaseView(ScrollView):
     test_case_list = ObjectProperty(None)
@@ -26,6 +34,10 @@ class TestCaseView(ScrollView):
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
 
+    def on_enter(self):
+        print("aici -----------------")
+        self.test_case_list.bind(minimum_height=self.test_case_list.setter('height') )
+    
     def load_test_pressed(self, instance):
         print("loading test case")
 
@@ -34,6 +46,7 @@ class TestCaseView(ScrollView):
 
     def add_step(self, instance):
         print("adding step")
+        self.test_case_list.add_node(TestCaseEntry.load())
 
 class TreeViewTextInput(TextInput,TreeViewNode):
     def __init__(self, **kwargs):

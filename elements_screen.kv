@@ -81,10 +81,13 @@ ElementsScreen:
                     Button:
                         text:'+ Add step'
                         on_press:test_case_view.add_step(self)
-
-                TreeView:
-                    id:test_case_list
+                
+                ScrollView:
                     size_hint:1, None
+                    height:200
+                    TreeView:
+                        hide_root: True
+                        id:test_case_list
                         
         Label:
             text:"Test zone"
