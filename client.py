@@ -15,6 +15,7 @@ from kivy.properties import ObjectProperty
 import requests
 import json
 import sys
+import types
 
 from tech.ironsheep.webdriver.command import Config, Command
 
@@ -27,6 +28,22 @@ class TestCaseEntry(StackLayout, TreeViewNode):
     @staticmethod
     def load():
         return Builder.load_file('test_case_entry.kv')
+
+    def command_choose(self, instance, no):
+        self.popup.dismiss()
+        self.command_no = no
+
+    def show_commands(self, instance):
+        popup_content = Builder.load_file('choose_command_content.kv')
+        
+        popup_content.choose = types.MethodType(self.command_choose, popup_content)
+
+        self.popup = Popup( title='Choose command',
+                        content=popup_content,
+                        size_hint=(None, None),
+                        size=(300,300) )
+        
+        self.popup.open()
 
 class TestCaseView(ScrollView):
     test_case_list = ObjectProperty(None)

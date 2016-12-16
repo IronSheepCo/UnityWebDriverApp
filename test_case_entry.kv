@@ -4,5 +4,11 @@
 
 TestCaseEntry:
     height:height
-    Label:
-        text:"aici" 
+    StackLayout:
+        Button:
+            size_hint:0.25, 1
+            text:"Command"
+            on_press:root.show_commands(self)
+        Label:
+            size_hint:0.25, 1
+            text:"alt ceva"
