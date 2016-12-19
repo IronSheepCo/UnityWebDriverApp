@@ -11,6 +11,20 @@ class Config:
 
 class Command:
     @staticmethod
+    def intToText(no):
+        if no == 1:
+            return "Click"
+        if no == 2:
+            return "Get text"
+        if no == 3:
+            return "Get attribute"
+        if no == 4:
+            return "Get name"
+        if no == 5:
+            return "Wait"
+        return ""
+
+    @staticmethod
     def click(uuid):
         endpoint = 'element/'+uuid+'/click'
         print(endpoint)

@@ -22,6 +22,9 @@ from tech.ironsheep.webdriver.command import Config, Command
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
 class TestCaseEntry(StackLayout, TreeViewNode):
+    target_input = ObjectProperty(None)
+    command_button = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super(TestCaseEntry, self).__init__(**kwargs)
 
@@ -32,6 +35,7 @@ class TestCaseEntry(StackLayout, TreeViewNode):
     def command_choose(self, instance, no):
         self.popup.dismiss()
         self.command_no = no
+        self.command_button.text = Command.intToText( no )
 
     def show_commands(self, instance):
         popup_content = Builder.load_file('choose_command_content.kv')
