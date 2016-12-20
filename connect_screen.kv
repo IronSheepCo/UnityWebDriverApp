@@ -18,6 +18,11 @@ ConnectScreen:
             text: "127.0.0.1"
         Button
             height:height
-            size_hint: 1.0, None
-            text:"Connect"
+            size_hint: 0.5, None
+            text:"Connect to IP"
             on_press:root.connect_callback(self) 
+        Button
+            height:height
+            size_hint:0.5, None
+            text:"Auto Connect"
+            on_press:root.start_connect_callback(self)
