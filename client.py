@@ -134,28 +134,25 @@ class ConnectScreen( Screen ):
     def receive_ip(ip):
         ConnectScreen.ip = ip[0]
 
-    def start_connect_callback(self, instance):
+    def auto_connect_callback(self, instance):
         #check if we received a broadcast message
         BroadCastReceiver.EventOneTimeListener.put(lambda n: ConnectScreen.receive_ip(n))
 
         if BroadCastReceiver.broadcast_message_received == True:
             CallbackQueue.run_callback_with_thread_nonblocking()
             #continue with connection
-            if (ConnectScreen.ip != None):
+            if (ConnectScreen.ip != None): #only if we received an IP from a Broadcast
                 self.connect_callback(instance, ConnectScreen.ip)
 
-    def connect_callback(self, instance, ip = None):
-        if (ip == None):
-            Config.server_ip = self.ids["ip"].text
-        else:    
-            Config.server_ip = ip
+    def fixed_connect_callback(self, instance):
+        self.connect_callback(instance, self.ids["ip"].text)
+
+    def connect_callback(self, instance, ip):
+        Config.server_ip = ip
         print("clicked here")
         try:
-            #print Config.server_ip
-            #print Config.endpoint("status")
             status_req = requests.get( Config.endpoint("status") )
             session_ready = status_req.json()["ready"]
-            #print status_req.json()
             print( session_ready )
             if session_ready == False :
                 print("DELETING SESSION")
@@ -171,11 +168,12 @@ class ConnectScreen( Screen ):
             popup = Popup( title="Error", content=Label(text="No server connection at specified ip"), size_hint=(None,None), size=(300,200) )
             popup.open()
 
+import time
 class WebDriverApp(App):
     def build(self):
 
         if getattr(sys, 'frozen', False):
-                os.chdir(sys._MEIPASS)
+            os.chdir(sys._MEIPASS)
 
         self.sm = ScreenManager()
 
@@ -185,8 +183,10 @@ class WebDriverApp(App):
         return self.sm
 
     def on_stop(self):
+        Config.listening_for_broadcast = False
         delete_req = requests.delete(Config.endpoint_session(""))
         print("deleting session with id "+Config.session_id)
+        
 
 
 
@@ -219,13 +219,17 @@ class BroadCastReceiver():
 
     def Listener(self):
         print "Starting Loop:"
-        while self._stop is False:
-            data, addr = self.serverSock.recvfrom(1024)            
+        while Config.listening_for_broadcast is True:
+            self.serverSock.settimeout(1.0)
+            try:
+                data, addr = self.serverSock.recvfrom(1024)            
+            except socket.timeout:
+                continue
             #print "Message: ", data, addr
             if (cmp(data, UDP_LISTENING_FOR_STRING) == 0 and BroadCastReceiver.broadcast_message_received == False): #broadcast received
                 BroadCastReceiver.broadcast_message_received = True
                 CallbackQueue.queue_callback_on_thread(lambda: BroadCastReceiver.Listener_Callback(data, addr))
-                self._stop = True
+                Config.listening_for_broadcast = False
     
     @staticmethod
     def Listener_Callback(data, addr):
@@ -241,14 +245,17 @@ class BroadCastReceiver():
 
     def __init__(self):
         self.serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.serverSock.bind(('', UDP_BROADCAST_PORT))
-        self._stop = False
+        self.serverSock.bind(('', UDP_BROADCAST_PORT))        
         self.clientThread = threading.Thread(target=self.Listener).start() # start UDP listener on a new thread
+
+    def __del__(self):
+        print("a murit")
 
         #while True: #test for Thread callback
         #    CallbackQueue.run_callback_with_thread_blocking()
-    
+
 if __name__ == '__main__':
+    Config.listening_for_broadcast = True
     BroadCastReceiver() #start UDP client - move it on the Connect Button ?
     WebDriverApp().run()
 

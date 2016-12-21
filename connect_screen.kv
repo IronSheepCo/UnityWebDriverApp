@@ -20,9 +20,9 @@ ConnectScreen:
             height:height
             size_hint: 0.5, None
             text:"Connect to IP"
-            on_press:root.connect_callback(self) 
+            on_press:root.fixed_connect_callback(self) 
         Button
             height:height
             size_hint:0.5, None
             text:"Auto Connect"
-            on_press:root.start_connect_callback(self)
+            on_press:root.auto_connect_callback(self)
