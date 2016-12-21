@@ -151,8 +151,11 @@ class ConnectScreen( Screen ):
             Config.server_ip = ip
         print("clicked here")
         try:
+            #print Config.server_ip
+            #print Config.endpoint("status")
             status_req = requests.get( Config.endpoint("status") )
             session_ready = status_req.json()["ready"]
+            #print status_req.json()
             print( session_ready )
             if session_ready == False :
                 print("DELETING SESSION")
@@ -187,6 +190,7 @@ class WebDriverApp(App):
 
 
 
+
 class CallbackQueue():
     callback_queue = Queue.Queue()
 
@@ -209,18 +213,19 @@ class CallbackQueue():
             callback()
 
 class BroadCastReceiver():
-    serverSock = socket
+    #serverSock = socket
     broadcast_message_received = False
     EventOneTimeListener = Queue.Queue()
 
     def Listener(self):
         print "Starting Loop:"
-        while True:
+        while self._stop is False:
             data, addr = self.serverSock.recvfrom(1024)            
             #print "Message: ", data, addr
             if (cmp(data, UDP_LISTENING_FOR_STRING) == 0 and BroadCastReceiver.broadcast_message_received == False): #broadcast received
                 BroadCastReceiver.broadcast_message_received = True
                 CallbackQueue.queue_callback_on_thread(lambda: BroadCastReceiver.Listener_Callback(data, addr))
+                self._stop = True
     
     @staticmethod
     def Listener_Callback(data, addr):
@@ -237,7 +242,8 @@ class BroadCastReceiver():
     def __init__(self):
         self.serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.serverSock.bind(('', UDP_BROADCAST_PORT))
-        clientThread = threading.Thread(target=self.Listener).start() # start UDP listener on a new thread
+        self._stop = False
+        self.clientThread = threading.Thread(target=self.Listener).start() # start UDP listener on a new thread
 
         #while True: #test for Thread callback
         #    CallbackQueue.run_callback_with_thread_blocking()
