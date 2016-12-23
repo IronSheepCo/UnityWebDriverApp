@@ -18,12 +18,14 @@ import sys
 import types
 
 from tech.ironsheep.webdriver.command import Config, Command
+from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
 class TestCaseEntry(StackLayout, TreeViewNode):
     target_input = ObjectProperty(None)
     command_button = ObjectProperty(None)
+    step = None
 
     def __init__(self, **kwargs):
         super(TestCaseEntry, self).__init__(**kwargs)
@@ -36,6 +38,15 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         self.popup.dismiss()
         self.command_no = no
         self.command_button.text = Command.intToText( no )
+        self.step.command = no
+   
+    def on_target_input(self, instance, extra):
+        self.target_input.bind(text=self.on_text)
+
+    def on_text(self, instance, extra):
+        if self.step is None:
+            return
+        self.step.target = self.target_input.text
 
     def show_commands(self, instance):
         popup_content = Builder.load_file('choose_command_content.kv')
@@ -51,6 +62,7 @@ class TestCaseEntry(StackLayout, TreeViewNode):
 
 class TestCaseView(ScrollView):
     test_case_list = ObjectProperty(None)
+    test_case = TestCase()
 
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
@@ -63,10 +75,15 @@ class TestCaseView(ScrollView):
 
     def save_test_pressed(self, instance):
         print("saving test case")
+        print( self.test_case.toJson() )
 
     def add_step(self, instance):
         print("adding step")
-        self.test_case_list.add_node(TestCaseEntry.load())
+        tce = TestCaseEntry.load()
+        step = TestCaseStep()
+        tce.step = step
+        self.test_case.addStep( step )
+        self.test_case_list.add_node( tce )
 
 class TreeViewTextInput(TextInput,TreeViewNode):
     def __init__(self, **kwargs):
