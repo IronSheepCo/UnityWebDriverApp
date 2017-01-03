@@ -111,13 +111,16 @@ class TestCaseView(ScrollView):
                              size_hint=(0.8, 0.8) )
         self._popup.open()
 
+    def add_step_view(self, step):
+        tce = TestCaseEntry.load()
+        tce.step = step
+        self.test_case_list.add_node( tce )
+    
     def add_step(self, instance):
         print("adding step")
-        tce = TestCaseEntry.load()
         step = TestCaseStep()
-        tce.step = step
         self.test_case.addStep( step )
-        self.test_case_list.add_node( tce )
+        self.add_step_view( step )
 
 class TreeViewTextInput(TextInput,TreeViewNode):
     def __init__(self, **kwargs):
