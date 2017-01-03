@@ -12,6 +12,15 @@ class TestCaseStep:
     def flatten(self):
         return {"command":self.command, "target":self.target, "arg":self.arg}
 
+    @staticmethod
+    def loadFromFlattent(flatten):
+        ret = TestCaseStep()
+        ret.command = flatten["command"]
+        ret.target = flatten["target"]
+        ret.arg = flatten["arg"]
+
+        return ret
+
 class TestCase:
     def __init__(self):
         self.steps = []
