@@ -38,6 +38,8 @@ class TestCase:
     def toJson(self):
         return json.dumps( self.flatten() )
 
+    def run(self):
+        
 
     @staticmethod
     def loadFromJson(json_string):
@@ -47,6 +49,5 @@ class TestCase:
         for step in dec["steps"]:
             st = TestCaseStep.loadFromFlattent( step )
             ret.addStep( st )
-            print( st )
 
         return ret
