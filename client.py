@@ -90,6 +90,9 @@ class TestCaseView(ScrollView):
         self._popup.dismiss()
 
     def load(self, path, filename):
+        content = ""
+        with open( os.path.join(path, filename[0]), "r" ) as stream:
+            content = stream.read()
         self._popup.dismiss()
     
     def on_test_case_list(self, instance, value):
