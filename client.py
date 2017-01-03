@@ -113,6 +113,7 @@ class TestCaseView(ScrollView):
     
     def run_test_case(self, instance):
         print( "running test case")
+        self.test_case.run()
 
     def load_test_pressed(self, instance):
         print("loading test case")
@@ -193,8 +194,7 @@ class ElementsScreen( Screen ):
 
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
-        payload = {"using":"xpath","value":self.xpath_query.text}
-        xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
+        xpath_req = Command.run_query( self.xpath_query.text )
         print(xpath_req.json())
         #clean the tree view
         nodes = []
