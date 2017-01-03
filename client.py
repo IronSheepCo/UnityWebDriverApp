@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
@@ -11,6 +12,8 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
+from kivy.uix.filechooser import FileChooserIconView
+from kivy.factory import Factory
 
 import requests
 import json
@@ -60,12 +63,28 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         
         self.popup.open()
 
+class LoadDialog(FloatLayout):
+    load = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
+class SaveDialog(FloatLayout):
+    save = ObjectProperty(None)
+    text_input = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
 class TestCaseView(ScrollView):
     test_case_list = ObjectProperty(None)
     test_case = TestCase()
 
+
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
+
+    def cancel(self):
+        self._popup.dismiss()
+
+    def save(self, path, filename):
+        self._popup.dismiss()
 
     def on_test_case_list(self, instance, value):
         self.test_case_list.bind(minimum_height=self.test_case_list.setter('height') )
@@ -75,7 +94,10 @@ class TestCaseView(ScrollView):
 
     def save_test_pressed(self, instance):
         print("saving test case")
-        print( self.test_case.toJson() )
+        content = SaveDialog( save=self.save, cancel=self.cancel )
+        self._popup = Popup( title="Save test case", content=content, 
+                             size_hint=(0.8, 0.8) )
+        self._popup.open()
 
     def add_step(self, instance):
         print("adding step")
@@ -194,6 +216,9 @@ class WebDriverApp(App):
     def on_stop(self):
         delete_req = requests.delete(Config.endpoint_session(""))
         print("deleting session with id "+Config.session_id)
+
+Factory.register('LoadDialog', cls=LoadDialog)
+Factory.register('SaveDialog', cls=SaveDialog)
 
 if __name__ == '__main__':
     WebDriverApp().run()
