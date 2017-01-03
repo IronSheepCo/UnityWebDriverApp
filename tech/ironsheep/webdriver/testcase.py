@@ -1,4 +1,5 @@
 import json
+from command import Command
 
 class TestCaseStep:
     def __init__(self):
@@ -39,7 +40,8 @@ class TestCase:
         return json.dumps( self.flatten() )
 
     def run(self):
-        
+        for step in self.steps:
+            Command.run_command_no( step.target, step.command )        
 
     @staticmethod
     def loadFromJson(json_string):

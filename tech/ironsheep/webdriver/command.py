@@ -27,6 +27,17 @@ class Command:
         return ""
 
     @staticmethod
+    def run_command_no(xpath_query, no):
+        response = Command.run_query( xpath_query ).json()
+        if "data" in response:
+            el = response["data"][0]
+            uuid = el[webelement_key_id]
+            if no == 1:
+                Command.click( uuid )
+        else:
+            return
+
+    @staticmethod
     def run_query(query):
         payload = {"using":"xpath","value":query}
         xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
