@@ -86,12 +86,18 @@ class TestCaseView(ScrollView):
     def save(self, path, filename):
         self._popup.dismiss()
 
+    def load(self, path, filename):
+        self._popup.dismiss()
+    
     def on_test_case_list(self, instance, value):
         self.test_case_list.bind(minimum_height=self.test_case_list.setter('height') )
     
     def load_test_pressed(self, instance):
         print("loading test case")
-
+        content = LoadDialog( load=self.load, cancel=self.cancel )
+        self._popup = Popup( title="Save test case", content=content, 
+                             size_hint=(0.8, 0.8) )
+        self._popup.open()
     def save_test_pressed(self, instance):
         print("saving test case")
         content = SaveDialog( save=self.save, cancel=self.cancel )
