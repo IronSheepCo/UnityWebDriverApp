@@ -64,6 +64,13 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         
         self.popup.open()
 
+    def load_from_step(self):
+        if self.step.command != "":
+            self.command_button.text = Command.intToText( self.step.command )
+            self.command_no = self.step.command
+        if self.step.target != "":
+            self.target_input.text = self.step.target
+
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
@@ -88,11 +95,17 @@ class TestCaseView(ScrollView):
         with open( os.path.join(path, filename), "w" ) as stream:
             stream.write( self.test_case.toJson() )
         self._popup.dismiss()
-
+    
     def load(self, path, filename):
         content = ""
         with open( os.path.join(path, filename[0]), "r" ) as stream:
             content = stream.read()
+
+        self.test_case = TestCase.loadFromJson( content )
+
+        for step in self.test_case.steps:
+            self.add_step_view( step )
+
         self._popup.dismiss()
     
     def on_test_case_list(self, instance, value):
@@ -115,6 +128,7 @@ class TestCaseView(ScrollView):
         tce = TestCaseEntry.load()
         tce.step = step
         self.test_case_list.add_node( tce )
+        tce.load_from_step()
     
     def add_step(self, instance):
         print("adding step")
