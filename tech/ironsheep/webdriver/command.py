@@ -25,6 +25,12 @@ class Command:
         return ""
 
     @staticmethod
+    def run_query(query):
+        payload = {"using":"xpath","value":query}
+        xpath_req = requests.post( Config.endpoint_session("elements"), data=json.dumps(payload) )
+        return xpath_req
+
+    @staticmethod
     def click(uuid):
         endpoint = 'element/'+uuid+'/click'
         print(endpoint)
