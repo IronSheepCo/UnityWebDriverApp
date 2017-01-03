@@ -81,6 +81,10 @@ ElementsScreen:
                     Button:
                         text:'+ Add step'
                         on_press:test_case_view.add_step(self)
+                    
+                    Button:
+                        text:'Run'
+                        on_press:test_case_view.run_test_case(self)
                 
                 ScrollView:
                     size_hint:1, None

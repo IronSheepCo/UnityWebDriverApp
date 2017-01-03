@@ -64,6 +64,7 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         
         self.popup.open()
 
+
     def load_from_step(self):
         if self.step.command != "":
             self.command_button.text = Command.intToText( self.step.command )
@@ -83,7 +84,6 @@ class SaveDialog(FloatLayout):
 class TestCaseView(ScrollView):
     test_case_list = ObjectProperty(None)
     test_case = TestCase()
-
 
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
@@ -111,12 +111,16 @@ class TestCaseView(ScrollView):
     def on_test_case_list(self, instance, value):
         self.test_case_list.bind(minimum_height=self.test_case_list.setter('height') )
     
+    def run_test_case(self, instance):
+        print( "running test case")
+
     def load_test_pressed(self, instance):
         print("loading test case")
         content = LoadDialog( load=self.load, cancel=self.cancel )
         self._popup = Popup( title="Save test case", content=content, 
                              size_hint=(0.8, 0.8) )
         self._popup.open()
+    
     def save_test_pressed(self, instance):
         print("saving test case")
         content = SaveDialog( save=self.save, cancel=self.cancel )
