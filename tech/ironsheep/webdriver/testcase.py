@@ -38,3 +38,15 @@ class TestCase:
     def toJson(self):
         return json.dumps( self.flatten() )
 
+
+    @staticmethod
+    def loadFromJson(json_string):
+        dec = json.loads( json_string )
+        ret = TestCase()
+        
+        for step in dec["steps"]:
+            st = TestCaseStep.loadFromFlattent( step )
+            ret.addStep( st )
+            print( st )
+
+        return ret
