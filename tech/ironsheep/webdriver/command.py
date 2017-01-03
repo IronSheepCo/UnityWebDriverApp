@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
@@ -28,7 +29,12 @@ class Command:
 
     @staticmethod
     def run_command_no(xpath_query, no):
+        if no == 5:
+            time.sleep( float(xpath_query) )
+            return
+
         response = Command.run_query( xpath_query ).json()
+        
         if "data" in response:
             el = response["data"][0]
             uuid = el[webelement_key_id]
