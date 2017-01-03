@@ -19,6 +19,7 @@ import requests
 import json
 import sys
 import types
+import os
 
 from tech.ironsheep.webdriver.command import Config, Command
 from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
@@ -84,6 +85,8 @@ class TestCaseView(ScrollView):
         self._popup.dismiss()
 
     def save(self, path, filename):
+        with open( os.path.join(path, filename), "w" ) as stream:
+            stream.write( self.test_case.toJson() )
         self._popup.dismiss()
 
     def load(self, path, filename):
