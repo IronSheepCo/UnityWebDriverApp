@@ -1,6 +1,8 @@
 import requests
 import json
 
+webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
+
 class Config:
     @staticmethod
     def endpoint(endpoint):

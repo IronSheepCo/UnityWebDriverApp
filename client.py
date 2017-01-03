@@ -21,10 +21,8 @@ import sys
 import types
 import os
 
-from tech.ironsheep.webdriver.command import Config, Command
+from tech.ironsheep.webdriver.command import Config, Command, webelement_key_id
 from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
-
-webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
 class TestCaseEntry(StackLayout, TreeViewNode):
     target_input = ObjectProperty(None)
