@@ -154,6 +154,12 @@ ElementsScreen:
             size_hint:0.15, None
             on_press:root.pressed_get_text(self)
 
+        Button:
+            text:"Highlight"
+            height:height
+            size_hint:0.15, None
+            on_press:root.pressed_highlight(self)
+
         Label:
             text:"Response"
             height:height
