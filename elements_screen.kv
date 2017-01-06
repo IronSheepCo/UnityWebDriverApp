@@ -86,6 +86,10 @@ ElementsScreen:
                         text:'Run'
                         on_press:test_case_view.run_test_case(self)
                 
+                    Button:
+                        text:'Clear'
+                        on_press:test_case_view.clear()
+
                 ScrollView:
                     size_hint:1, None
                     height:270
