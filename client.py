@@ -97,6 +97,14 @@ class TestCaseView(ScrollView):
     def cancel(self):
         self._popup.dismiss()
 
+    def clear(self):
+        print('clearing test case')
+        nodes = []
+        for node in self.test_case_list.iterate_all_nodes():
+            nodes.append( node )
+        for node in nodes:
+            self.test_case_list.remove_node( node )
+
     def save(self, path, filename):
         with open( os.path.join(path, filename), "w" ) as stream:
             stream.write( self.test_case.toJson() )
@@ -106,6 +114,9 @@ class TestCaseView(ScrollView):
         content = ""
         with open( os.path.join(path, filename[0]), "r" ) as stream:
             content = stream.read()
+
+        #clearing existing test case
+        self.clear()
 
         self.test_case = TestCase.loadFromJson( content )
 
