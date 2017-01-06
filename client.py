@@ -209,6 +209,11 @@ class ElementsScreen( Screen ):
         if response["data"] != None:
             self.response_area.text = response["data"]
 
+    def pressed_highlight(self, instance):
+        print('highlighting '+self.text_uuid.text)
+
+        response = Command.highlight( self.text_uuid.text )
+
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
         xpath_req = Command.run_query( self.xpath_query.text )
