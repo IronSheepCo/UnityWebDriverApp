@@ -14,6 +14,7 @@ from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.factory import Factory
+from kivy.clock import Clock
 
 import requests
 import json
@@ -49,9 +50,23 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         self.command_no = no
         self.command_button.text = Command.intToText( no )
         self.step.command = no
-   
+ 
+    def move_cursor_real(self, dt):
+        self.target_input.do_cursor_movement( 'cursor_home', True )
+        self.target_input.focus = True
+    
+    def move_cursor(self):
+        print('moving cursor')
+        Clock.schedule_once( self.move_cursor_real, 0.1 )
+
     def on_target_input(self, instance, extra):
         self.target_input.bind(text=self.on_text)
+        #ugly hack here, 'cause I don't want to do 
+        #an inheritance
+        #doing some AOP here, calling the paste method 
+        #but also our own cursor move to begining method
+        old_paste = self.target_input.paste
+        self.target_input.paste = types.MethodType(lambda _:[old_paste(),self.move_cursor()] , self.target_input)
 
     def on_text(self, instance, extra):
         if self.step is None:
@@ -151,6 +166,7 @@ class TestCaseView(ScrollView):
         tce.step = step
         self.test_case_list.add_node( tce )
         tce.load_from_step()
+        tce.move_cursor()
     
     def add_step(self, instance):
         print("adding step")
