@@ -81,4 +81,11 @@ class Command:
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
         return response.json()
+
+    @staticmethod
+    def highlight(uuid):
+        endpoint = 'element/'+uuid+'/highlight'
+        response = requests.get( Config.endpoint_session(endpoint) )
+        print( response.json() )
+        return response.json()
     
