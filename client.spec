@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['client.py'],
-             pathex=['/Users/macpro/Documents/ironsheep/UnityWebDriverClient'],
+             pathex=['.'],
              binaries=None,
              datas=[ ('connect_screen.kv', '.'), ('elements_screen.kv', '.'), ('test_case_entry.kv', '.'), ('choose_command_content.kv', '.')  ],
              hiddenimports=[],
