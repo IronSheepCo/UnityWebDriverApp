@@ -5,12 +5,13 @@ import time
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
 class Config:
+    SESSION_PORT = "4569"
     @staticmethod
     def endpoint(endpoint):
-        return "http://"+Config.server_ip+":8080/"+endpoint
+        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/"+endpoint
     @staticmethod
     def endpoint_session(endpoint):
-        return "http://"+Config.server_ip+":8080/session/"+Config.session_id+"/"+endpoint
+        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/session/"+Config.session_id+"/"+endpoint
 
 class Command:
     @staticmethod
