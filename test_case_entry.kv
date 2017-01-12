@@ -4,5 +4,17 @@
 
 TestCaseEntry:
     height:height
-    Label:
-        text:"aici" 
+
+    target_input:target_input
+    command_button:command_button
+
+    StackLayout:
+        Button:
+            id:command_button
+            size_hint:0.25, 1
+            text:"Command"
+            on_press:root.show_commands(self)
+        TextInput:
+            id:target_input
+            size_hint:0.5, 1
+            text:"target"

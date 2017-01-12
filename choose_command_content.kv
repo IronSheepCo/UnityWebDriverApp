@@ -1,0 +1,32 @@
+#:kivy 1.0
+
+#:set height 30
+
+StackLayout:
+    size_hint:1,1
+    Button:
+        size_hint:1,None
+        text:"Click"
+        height:height
+        on_release:root.choose(1)
+    Button:
+        size_hint:1,None
+        text:"Get text"
+        height:height
+        on_release:root.choose(2)
+    Button:
+        size_hint:1,None
+        text:"Get attribute"
+        height:height
+        on_release:root.choose(3)
+    Button:
+        size_hint:1,None
+        text:"Get name"
+        height:height
+        on_release:root.choose(4)
+    Button:
+        size_hint:1,None
+        text:"Wait"
+        height:height
+        on_release:root.choose(5)
+    

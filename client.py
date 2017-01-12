@@ -15,6 +15,7 @@ from kivy.properties import ObjectProperty
 import requests
 import json
 import sys
+import types
 
 import Queue
 import threading
@@ -29,12 +30,32 @@ UDP_BROADCAST_PORT = 23923
 UDP_LISTENING_FOR_STRING = "echo for clients"
 
 class TestCaseEntry(StackLayout, TreeViewNode):
+    target_input = ObjectProperty(None)
+    command_button = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super(TestCaseEntry, self).__init__(**kwargs)
 
     @staticmethod
     def load():
         return Builder.load_file('test_case_entry.kv')
+
+    def command_choose(self, instance, no):
+        self.popup.dismiss()
+        self.command_no = no
+        self.command_button.text = Command.intToText( no )
+
+    def show_commands(self, instance):
+        popup_content = Builder.load_file('choose_command_content.kv')
+        
+        popup_content.choose = types.MethodType(self.command_choose, popup_content)
+
+        self.popup = Popup( title='Choose command',
+                        content=popup_content,
+                        size_hint=(None, None),
+                        size=(300,300) )
+        
+        self.popup.open()
 
 class TestCaseView(ScrollView):
     test_case_list = ObjectProperty(None)
