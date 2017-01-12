@@ -2,12 +2,13 @@ import requests
 import json
 
 class Config:
+    SESSION_PORT = "4569"
     @staticmethod
     def endpoint(endpoint):
-        return "http://"+Config.server_ip+":8080/"+endpoint
+        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/"+endpoint
     @staticmethod
     def endpoint_session(endpoint):
-        return "http://"+Config.server_ip+":8080/session/"+Config.session_id+"/"+endpoint
+        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/session/"+Config.session_id+"/"+endpoint
 
 class Command:
     @staticmethod
