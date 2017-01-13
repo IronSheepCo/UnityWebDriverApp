@@ -103,6 +103,14 @@ class Command:
             return True
 
     @staticmethod
+    def wait_for_element(xpath, timeout = 30):
+        Command.timeouts( implicit=timeout*1000 )
+        response = Command.run_query( xpath ).json()
+        if "data" in response:
+            return True
+        return False
+
+    @staticmethod
     def highlight(uuid):
         endpoint = 'element/'+uuid+'/highlight'
         response = requests.get( Config.endpoint_session(endpoint) )
