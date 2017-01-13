@@ -84,6 +84,25 @@ class Command:
         return response.json()
 
     @staticmethod
+    def timeouts( implicit=-1, page_load=-1, script=-1):
+        endpoint = 'timeouts'
+        params = {}
+        if implicit >= 0:
+            params["implicit"] = implicit
+        if page_load >= 0:
+            params["page load"] = page_load
+        if script >= 0:
+            params["script"] = script
+        payload = {'parameters':params}
+        
+        response = requests.post( Config.endpoint_session(endpoint), json=payload)
+
+        if 'error' in response.json():
+            return False
+        else:
+            return True
+
+    @staticmethod
     def highlight(uuid):
         endpoint = 'element/'+uuid+'/highlight'
         response = requests.get( Config.endpoint_session(endpoint) )
