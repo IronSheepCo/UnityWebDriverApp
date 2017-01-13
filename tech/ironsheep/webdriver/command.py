@@ -26,6 +26,8 @@ class Command:
             return "Get name"
         if no == 5:
             return "Wait"
+        if no == 6:
+            return "WaitForElement"
         return ""
 
     @staticmethod
@@ -41,6 +43,8 @@ class Command:
             uuid = el[webelement_key_id]
             if no == 1:
                 Command.click( uuid )
+            if no == 6:
+                Command.wait_for_element( xpath_query )
         else:
             return
 
