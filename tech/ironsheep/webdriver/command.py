@@ -8,10 +8,10 @@ class Config:
     SESSION_PORT = "4569"
     @staticmethod
     def endpoint(endpoint):
-        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/"+endpoint
+        return "http://%s:%s/%s" % (Config.server_ip, Config.SESSION_PORT, endpoint )
     @staticmethod
     def endpoint_session(endpoint):
-        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/session/"+Config.session_id+"/"+endpoint
+        return "http://%s:%s/session/%s/%s" %(Config.server_ip, Config.SESSION_PORT, Config.session_id, endpoint)
 
 class Command:
     @staticmethod
