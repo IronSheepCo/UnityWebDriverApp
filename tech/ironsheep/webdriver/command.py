@@ -28,6 +28,14 @@ class Command:
             return "Wait"
         if no == 6:
             return "WaitForElement"
+        if no == 7:
+            return "WaitAndClick"
+        if no == 8:
+            return "WaitAndGetText"
+        if no == 9:
+            return "WaitAndGetAttribute"
+        if no == 10:
+            return "WaitAndGetName"
         return ""
 
     @staticmethod
