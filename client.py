@@ -157,7 +157,18 @@ class TestCaseView(ScrollView):
     
     def run_test_case(self, instance):
         print( "running test case")
-        self.test_case.run()
+        result = self.test_case.run()
+        if result != True:
+            alert_text = "Test case failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(result.no,result.target)
+            alert = Popup( title="Error running test case",
+                    content=Label(text=alert_text,
+                                    halign="center",
+                                    markup=True),
+                    size_hint=(0.75, 0.75)
+                    )
+
+            alert.open()
+            
 
     def load_test_pressed(self, instance):
         print("loading test case")
