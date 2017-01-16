@@ -75,7 +75,7 @@ class Command:
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
-        return response.json()
+        return response.json()["data"]
 
     @staticmethod
     def send_keys(uuid, keys):
