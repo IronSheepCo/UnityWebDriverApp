@@ -49,9 +49,15 @@ class Command:
             uuid = el[webelement_key_id]
             if no == 1:
                 Command.click( uuid )
+            if no == 2:
+                return Command.attribute( uuid, "text" )
+            if no == 3:
+                return Command.attribute( uuid, arg )
+            if no == 4:
+                return Command.name(uuid)
             if no == 6:
                 Command.wait_for_element( xpath_query, float(arg) )
-                return True
+            return True
         else:
             return False
 
