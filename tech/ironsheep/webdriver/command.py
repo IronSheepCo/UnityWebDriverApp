@@ -90,6 +90,8 @@ class Command:
             return True
         else:
             return False
+        
+        return False
 
     @staticmethod
     def run_query(query):
