@@ -8,10 +8,10 @@ class Config:
     SESSION_PORT = "4569"
     @staticmethod
     def endpoint(endpoint):
-        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/"+endpoint
+        return "http://%s:%s/%s" % (Config.server_ip, Config.SESSION_PORT, endpoint )
     @staticmethod
     def endpoint_session(endpoint):
-        return "http://"+Config.server_ip+":"+Config.SESSION_PORT+"/session/"+Config.session_id+"/"+endpoint
+        return "http://%s:%s/session/%s/%s" %(Config.server_ip, Config.SESSION_PORT, Config.session_id, endpoint)
 
 class Command:
     @staticmethod
@@ -26,23 +26,34 @@ class Command:
             return "Get name"
         if no == 5:
             return "Wait"
+        if no == 6:
+            return "WaitForElement"
         return ""
 
     @staticmethod
-    def run_command_no(xpath_query, no):
+    def run_command_no(xpath_query, no, arg=None):
         if no == 5:
             time.sleep( float(xpath_query) )
             return
 
         response = Command.run_query( xpath_query ).json()
-        
+
         if "data" in response:
+            
+            if len(response["data"]) == 0:
+                #expecting result here
+                #but none provided, so return False
+                return False
+
             el = response["data"][0]
             uuid = el[webelement_key_id]
             if no == 1:
                 Command.click( uuid )
+            if no == 6:
+                Command.wait_for_element( xpath_query, float(arg) )
+                return True
         else:
-            return
+            return False
 
     @staticmethod
     def run_query(query):
@@ -82,6 +93,33 @@ class Command:
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
         return response.json()
+
+    @staticmethod
+    def timeouts( implicit=-1, page_load=-1, script=-1):
+        endpoint = 'timeouts'
+        params = {}
+        if implicit >= 0:
+            params["implicit"] = implicit
+        if page_load >= 0:
+            params["page load"] = page_load
+        if script >= 0:
+            params["script"] = script
+        payload = {'parameters':params}
+        
+        response = requests.post( Config.endpoint_session(endpoint), json=payload)
+
+        if 'error' in response.json():
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def wait_for_element(xpath, timeout = 30):
+        Command.timeouts( implicit=timeout*1000 )
+        response = Command.run_query( xpath ).json()
+        if "data" in response:
+            return True
+        return False
 
     @staticmethod
     def highlight(uuid):

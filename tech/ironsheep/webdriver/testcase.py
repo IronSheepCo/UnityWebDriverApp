@@ -41,7 +41,7 @@ class TestCase:
 
     def run(self):
         for step in self.steps:
-            Command.run_command_no( step.target, step.command )        
+            Command.run_command_no( step.target, step.command, step.arg )        
 
     @staticmethod
     def loadFromJson(json_string):

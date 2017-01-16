@@ -43,15 +43,15 @@ class TestTestCase(unittest.TestCase):
 
     def test_add_flatten(self):
         self.assertEqual( self.tc.flatten()["name"], "Test case name" )
-        self.assertEqual( len(self.tc.flatten()["step"]), 1 )
-        self.assertEqual( self.tc.flatten()["step"][0]["command"], 5 )
+        self.assertEqual( len(self.tc.flatten()["steps"]), 1 )
+        self.assertEqual( self.tc.flatten()["steps"][0]["command"], 5 )
 
     def test_json(self):
         to_json = self.tc.toJson()
         back = json.loads( to_json )
         self.assertEqual( back["name"], "Test case name" )
-        self.assertEqual( len( back["step"] ), 1 )
-        self.assertEqual( back["step"][0]["command"], 5 )
+        self.assertEqual( len( back["steps"] ), 1 )
+        self.assertEqual( back["steps"][0]["command"], 5 )
 
 if __name__=="__main__":
     unittest.main()

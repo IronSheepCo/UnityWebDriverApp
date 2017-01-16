@@ -37,6 +37,7 @@ UDP_LISTENING_FOR_STRING = "echo for clients"
 class TestCaseEntry(StackLayout, TreeViewNode):
     target_input = ObjectProperty(None)
     command_button = ObjectProperty(None)
+    arg_input = ObjectProperty(None)
     step = None
 
     def __init__(self, **kwargs):
@@ -74,6 +75,14 @@ class TestCaseEntry(StackLayout, TreeViewNode):
             return
         self.step.target = self.target_input.text
 
+    def on_arg_input(self, instance, extra):
+        self.arg_input.bind(text=self.on_args)
+   
+    def on_args(self, instance, extra):
+        if self.step is None:
+            return
+        self.step.arg = self.arg_input.text
+
     def show_commands(self, instance):
         popup_content = Builder.load_file('choose_command_content.kv')
         
@@ -93,6 +102,8 @@ class TestCaseEntry(StackLayout, TreeViewNode):
             self.command_no = self.step.command
         if self.step.target != "":
             self.target_input.text = self.step.target
+        if self.step.arg != "":
+            self.arg_input.text = self.step.arg
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
