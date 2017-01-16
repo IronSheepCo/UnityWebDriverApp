@@ -132,8 +132,17 @@ class Command:
         Command.timeouts( implicit=timeout*1000 )
         response = Command.run_query( xpath ).json()
         if "data" in response:
-            return True
+            el = response["data"][0]
+            uuid = el[webelement_key_id]
+            return uuid
         return False
+    
+    @staticmethod
+    def wait_and_click(xpath, timeout = 30):
+        uuid = Command.wait_for_element( xpath, timeout)
+        if uuid == False:
+            return False
+        return Command.click( uuid ) 
 
     @staticmethod
     def highlight(uuid):
