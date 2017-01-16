@@ -37,6 +37,7 @@ UDP_LISTENING_FOR_STRING = "echo for clients"
 class TestCaseEntry(StackLayout, TreeViewNode):
     target_input = ObjectProperty(None)
     command_button = ObjectProperty(None)
+    arg_input = ObjectProperty(None)
     step = None
 
     def __init__(self, **kwargs):
