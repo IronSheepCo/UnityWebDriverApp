@@ -53,6 +53,13 @@ class TestSetTimeouts(unittest.TestCase):
         data = response.json()["data"]
         self.assertEqual( data["script"], 500 )
         self.assertEqual( data["implicit"], 0 )
-    
+   
+    def test_set_timeouts_float(self):
+        Command.timeouts( implicit = 2345.0 )
+        response = requests.get( Config.endpoint_session("timeouts") )
+        data = response.json()["data"]
+        self.assertEqual( data["implicit"], 2345 )
+
+
     def tearDown(self):
        requests.delete( Config.endpoint_session("") ) 
