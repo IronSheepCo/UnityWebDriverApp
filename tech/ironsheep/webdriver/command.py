@@ -42,12 +42,15 @@ class Command:
     def run_command_no(xpath_query, no, arg=None):
         if no == 5:
             time.sleep( float(xpath_query) )
-            return
+            return True
+        if no == 6:
+            return Command.wait_for_element( xpath_query, float(arg) )
+        if no == 7:
+            return Command.wait_and_click( xpath_query, float(arg) ) 
 
         response = Command.run_query( xpath_query ).json()
 
         if "data" in response:
-            
             if len(response["data"]) == 0:
                 #expecting result here
                 #but none provided, so return False
@@ -55,6 +58,7 @@ class Command:
 
             el = response["data"][0]
             uuid = el[webelement_key_id]
+            
             if no == 1:
                 Command.click( uuid )
             if no == 2:
@@ -63,8 +67,6 @@ class Command:
                 return Command.attribute( uuid, arg )
             if no == 4:
                 return Command.name(uuid)
-            if no == 6:
-                Command.wait_for_element( xpath_query, float(arg) )
             return True
         else:
             return False
