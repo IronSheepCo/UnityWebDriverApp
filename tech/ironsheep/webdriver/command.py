@@ -46,7 +46,9 @@ class Command:
         if no == 6:
             return Command.wait_for_element( xpath_query, float(arg) )
         if no == 7:
-            return Command.wait_and_click( xpath_query, float(arg) ) 
+            return Command.wait_and_click( xpath_query, float(arg) )
+        if no == 8:
+            return Command.wait_and_get_text( xpath_query, float(arg) )
 
         response = Command.run_query( xpath_query ).json()
 
@@ -146,6 +148,13 @@ class Command:
             return False
         return Command.click( uuid ) 
 
+    @staticmethod
+    def wait_and_get_text(xpath, timeout = 30):
+        uuid = Command.wait_for_element( xpath, timeout)
+        if uuid == False:
+            return False
+        return Command.attribute( uuid, "text" ) 
+    
     @staticmethod
     def highlight(uuid):
         endpoint = 'element/'+uuid+'/highlight'
