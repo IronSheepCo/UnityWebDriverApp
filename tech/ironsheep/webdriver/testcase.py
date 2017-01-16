@@ -40,8 +40,13 @@ class TestCase:
         return json.dumps( self.flatten() )
 
     def run(self):
+        step_no = 0
         for step in self.steps:
-            Command.run_command_no( step.target, step.command, step.arg )        
+            step_no = step_no + 1
+            if Command.run_command_no( step.target, step.command, step.arg ) == False:
+                step.no = step_no
+                return step
+        return True
 
     @staticmethod
     def loadFromJson(json_string):
