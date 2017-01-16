@@ -23,8 +23,15 @@ ElementsScreen:
         Label:
             text:"XPath query"
             height:height
-            size_hint:0.5, None
-        
+            size_hint:0.35, None
+
+        Button:
+            id:clear_query_button
+            text:"Clear query"
+            height:height
+            size_hint:0.15, None
+            on_press:root.run_clear_query_callback(self)
+                    
         TextInput:
             id:xpath_query
             text:"//uibutton"

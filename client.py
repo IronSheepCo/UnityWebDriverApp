@@ -257,6 +257,10 @@ class ElementsScreen( Screen ):
             node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True ) )
             self.query_response.add_node( TreeViewTextInput(text=el["name"], multiline=False), node )
 
+    def run_clear_query_callback(self, instance):
+        print "Clear Query"
+        self.xpath_query.text = "//uibutton"
+
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
         self.query_response.bind(minimum_height=self.query_response.setter('height') )
