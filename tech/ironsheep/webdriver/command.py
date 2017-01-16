@@ -31,7 +31,7 @@ class Command:
         return ""
 
     @staticmethod
-    def run_command_no(xpath_query, no):
+    def run_command_no(xpath_query, no, arg=None):
         if no == 5:
             time.sleep( float(xpath_query) )
             return
@@ -44,7 +44,9 @@ class Command:
             if no == 1:
                 Command.click( uuid )
             if no == 6:
-                Command.wait_for_element( xpath_query )
+                print(arg)
+                print(float(arg))
+                Command.wait_for_element( xpath_query, float(arg) )
         else:
             return
 
