@@ -37,18 +37,23 @@ class Command:
             return
 
         response = Command.run_query( xpath_query ).json()
-        
+
         if "data" in response:
+            
+            if len(response["data"]) == 0:
+                #expecting result here
+                #but none provided, so return False
+                return False
+
             el = response["data"][0]
             uuid = el[webelement_key_id]
             if no == 1:
                 Command.click( uuid )
             if no == 6:
-                print(arg)
-                print(float(arg))
                 Command.wait_for_element( xpath_query, float(arg) )
+                return True
         else:
-            return
+            return False
 
     @staticmethod
     def run_query(query):
