@@ -99,11 +99,11 @@ class Command:
         endpoint = 'timeouts'
         params = {}
         if implicit >= 0:
-            params["implicit"] = implicit
+            params["implicit"] = int(implicit)
         if page_load >= 0:
-            params["page load"] = page_load
+            params["page load"] = int(page_load)
         if script >= 0:
-            params["script"] = script
+            params["script"] = int(script)
         payload = {'parameters':params}
         
         response = requests.post( Config.endpoint_session(endpoint), json=payload)
