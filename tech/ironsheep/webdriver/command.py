@@ -38,17 +38,35 @@ class Command:
 
     @staticmethod
     def run_command_no(xpath_query, no, arg=None):
+        timeout = 30
+
         if no == 5:
             time.sleep( float(xpath_query) )
             return True
         if no == 6:
-            return Command.wait_for_element( xpath_query, float(arg) )
+            try:
+                timeout = float(arg)
+            except ValueError:
+                pass
+            return Command.wait_for_element( xpath_query, timeout )
         if no == 7:
-            return Command.wait_and_click( xpath_query, float(arg) )
+            try:
+                timeout = float(arg)
+            except ValueError:
+                pass
+            return Command.wait_and_click( xpath_query, timeout )
         if no == 8:
-            return Command.wait_and_get_text( xpath_query, float(arg) )
+            try:
+                timeout = float(arg)
+            except ValueError:
+                pass
+            return Command.wait_and_get_text( xpath_query, timeout )
         if no == 10:
-            return Command.wait_and_get_name( xpath_query, float(arg) )
+            try:
+                timeout = float(arg)
+            except ValueError:
+                pass
+            return Command.wait_and_get_name( xpath_query, timeout )
 
         response = Command.run_query( xpath_query ).json()
 
