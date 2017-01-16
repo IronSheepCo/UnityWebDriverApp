@@ -2,36 +2,58 @@
 
 #:set height 30
 
-StackLayout:
-    size_hint:1,1
-    Button:
-        size_hint:1,None
-        text:"Click"
-        height:height
-        on_release:root.choose(1)
-    Button:
-        size_hint:1,None
-        text:"Get text"
-        height:height
-        on_release:root.choose(2)
-    Button:
-        size_hint:1,None
-        text:"Get attribute"
-        height:height
-        on_release:root.choose(3)
-    Button:
-        size_hint:1,None
-        text:"Get name"
-        height:height
-        on_release:root.choose(4)
-    Button:
-        size_hint:1,None
-        text:"Wait for element"
-        height:height
-        on_release:root.choose(6)
-    Button:
-        size_hint:1,None
-        text:"Wait"
-        height:height
-        on_release:root.choose(5)
-    
+ScrollView:
+    StackLayout:
+        size_hint: 1, None
+        height: self.minimum_height
+        Button:
+            size_hint:1,None
+            text:"Click"
+            height:height
+            on_release:root.choose(1)
+        Button:
+            size_hint:1,None
+            text:"Get text"
+            height:height
+            on_release:root.choose(2)
+        Button:
+            size_hint:1,None
+            text:"Get attribute"
+            height:height
+            on_release:root.choose(3)
+        Button:
+            size_hint:1,None
+            text:"Get name"
+            height:height
+            on_release:root.choose(4)
+        Button:
+            size_hint:1,None
+            text:"Wait for element"
+            height:height
+            on_release:root.choose(6)
+        Button:
+            size_hint:1,None
+            text:"Wait and Click"
+            height:height
+            on_release:root.choose(7)
+        Button:
+            size_hint:1,None
+            text:"Wait"
+            height:height
+            on_release:root.choose(5)
+        Button:
+            size_hint:1,None
+            text:"Wait and get text"
+            height:height
+            on_release:root.choose(8)
+        Button:
+            size_hint:1,None
+            text:"Wait and get attribute"
+            height:height
+            on_release:root.choose(9)
+        Button:
+            size_hint:1,None
+            text:"Wait and get name"
+            height:height
+            on_release:root.choose(10)
+        
