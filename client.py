@@ -271,6 +271,25 @@ class ElementsScreen( Screen ):
     def run_clear_query_callback(self, instance):
         print "Clear Query"
         self.xpath_query.text = "//uibutton"
+        
+    def disconnect_from_app(self, instance):
+        print "Try to disconnect"
+        #Config.server_ip = "127.0.0.1"
+        
+        try:
+            print("Deleting current session")
+            delete_session_req = requests.delete(Config.endpoint_session(""))
+            print( delete_session_req.json() )
+              
+        except Exception:
+            popup = Popup( title="Error", content=Label(text="Could not delete previous session"), size_hint=(None,None), size=(300,200) )
+            popup.open()
+        
+        Config.listening_for_broadcast = True
+        BroadCastReceiver()
+
+        #slide in the connect interface
+        self.manager.current = 'connect'
 
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
