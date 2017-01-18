@@ -20,10 +20,17 @@ ElementsScreen:
             height:height
             size_hint:1, None
 
+        Button:
+            id:disconnect
+            text:"Disconnect"
+            height:height
+            size_hint:0.15, None
+            on_press:root.disconnect_from_app(self)
+
         Label:
             text:"XPath query"
             height:height
-            size_hint:0.35, None
+            size_hint:0.2, None        
 
         Button:
             id:clear_query_button
