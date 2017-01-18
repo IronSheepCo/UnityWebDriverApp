@@ -289,9 +289,6 @@ class ElementsScreen( Screen ):
             popup = Popup( title="Error", content=Label(text="Could not delete previous session"), size_hint=(None,None), size=(300,200) )
             popup.open()
         
-        Config.listening_for_broadcast = True
-        BroadCastReceiver()
-
         #slide in the connect interface
         self.manager.current = 'connect'
 
@@ -418,7 +415,7 @@ class BroadCastReceiver():
 
     def __init__(self):
         self.serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.serverSock.bind(('', UDP_BROADCAST_PORT))        
+        self.serverSock.bind(('', UDP_BROADCAST_PORT))       
         self.clientThread = threading.Thread(target=self.Listener).start() # start UDP listener on a new thread
 
 Factory.register('LoadDialog', cls=LoadDialog)
