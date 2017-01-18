@@ -265,9 +265,13 @@ class ElementsScreen( Screen ):
             self.query_response.remove_node( node )
         #populate the tree view
         for el in xpath_req.json()["data"]:
-            node = self.query_response.add_node( TreeViewTextInput(text=el[webelement_key_id], is_open=True ) )
-            self.query_response.add_node( TreeViewTextInput(text=el["name"], multiline=False), node )
-
+            node = self.query_response.add_node( TreeViewTextInput(text=el["name"], is_open=False ) )
+            self.query_response.add_node( TreeViewTextInput(text="uuid: %s"%el[webelement_key_id], multilin=False), node)
+            for key in el:
+                if key in ['name', webelement_key_id]:
+                    continue
+                self.query_response.add_node( TreeViewTextInput(text="%s : %s"%(key, el[key]), multiline=False), node)
+            
     def run_clear_query_callback(self, instance):
         print "Clear Query"
         self.xpath_query.text = "//uibutton"
