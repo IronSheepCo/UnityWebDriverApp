@@ -76,8 +76,9 @@ ElementsScreen:
             test_case_list:test_case_list
             size_hint:0.5, 0.5
 
-            StackLayout:
+            BoxLayout:
                 size_hint:1, 1
+                orientation:'vertical'
 
                 BoxLayout:
                     orientation:'horizontal'
@@ -105,8 +106,7 @@ ElementsScreen:
                         on_press:test_case_view.clear()
 
                 ScrollView:
-                    size_hint:1, None
-                    height:270
+                    size_hint:1, 1
                     TreeView:
                         hide_root: True
                         size_hint:1, None
