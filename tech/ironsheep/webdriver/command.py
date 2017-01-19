@@ -181,7 +181,13 @@ class Command:
         if uuid == False:
             return False
         return Command.name( uuid ) 
-    
+   
+    @staticmethod
+    def is_visible(uuid):
+        endpoint = 'element/'+uuid+'/visible'
+        response = requests.get( Config.endpoint_session(endpoint) )
+        return response.json()["data"]
+
     @staticmethod
     def highlight(uuid):
         endpoint = 'element/'+uuid+'/highlight'
