@@ -32,6 +32,8 @@ class Command:
             return "WaitAndClick"
         if no == 8:
             return "WaitAndGetText"
+        if no == 9:
+            return "Visible"
         if no == 10:
             return "WaitAndGetName"
         return ""
@@ -87,6 +89,8 @@ class Command:
                 return Command.attribute( uuid, arg )
             if no == 4:
                 return Command.name(uuid)
+            if no == 9:
+                return Command.is_visible(uuid)
             return True
         else:
             return False
