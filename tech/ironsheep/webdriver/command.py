@@ -36,6 +36,8 @@ class Command:
             return "Visible"
         if no == 10:
             return "WaitAndGetName"
+        if no == 11:
+            return "WaitForVisible"
         return ""
 
     @staticmethod
@@ -69,6 +71,12 @@ class Command:
             except ValueError:
                 pass
             return Command.wait_and_get_name( xpath_query, timeout )
+        if no == 11:
+            try:
+                timeout = float(arg)
+            except ValueError:
+                pass
+            return Command.wait_for_visible( xpath_query, timeout )
 
         response = Command.run_query( xpath_query ).json()
 
@@ -191,6 +199,30 @@ class Command:
         endpoint = 'element/'+uuid+'/visible'
         response = requests.get( Config.endpoint_session(endpoint) )
         return response.json()["data"]
+
+    @staticmethod
+    def wait_for_visible(xpath, timeout = 30):
+        now = time.time()
+        while time.time() - now < timeout:
+            response = Command.run_query( xpath ).json()
+
+            if "data" in response:
+                if len(response["data"]) == 0:
+                    #expecting result here
+                    #but none provided, so return False
+                    continue
+            else:
+                continue
+            
+            el = response["data"][0]
+            uuid = el[webelement_key_id]
+
+            is_visible = Command.is_visible( uuid )
+
+            if is_visible == True:
+                return True
+
+        return False
 
     @staticmethod
     def highlight(uuid):
