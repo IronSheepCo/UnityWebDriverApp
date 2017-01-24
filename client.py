@@ -33,6 +33,8 @@ from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 
 UDP_BROADCAST_PORT = 23923
 UDP_LISTENING_FOR_STRING = "echo for clients"
+SERVER_SEARCH_TIME_DELAY = 1
+SERVER_BLACKOUT_TIME = 5
 
 class TestCaseEntry(StackLayout, TreeViewNode):
     target_input = ObjectProperty(None)
@@ -298,26 +300,48 @@ class ElementsScreen( Screen ):
 
 
 class ConnectScreen( Screen ):
-    ip = None
+    ip = "None"
+    port = ""
+    connect_list = ObjectProperty(None)
 
-    @staticmethod
-    def receive_ip(ip):
-        ConnectScreen.ip = ip[0]
+    def __init__(self, **kwargs):
+        super(ConnectScreen, self).__init__(**kwargs)    
+        self.servers = {}
+        Clock.schedule_interval(partial(ConnectScreen.timed_check, self), SERVER_SEARCH_TIME_DELAY)
+        
+    def addServer(self, ip, port, connectEntry):
+        self.servers[ip] = [port, connectEntry]
 
-    def auto_connect_callback(self, instance):
-        #check if we received a broadcast message
-        BroadCastReceiver.EventOneTimeListener.put(lambda n: ConnectScreen.receive_ip(n))
+    def add_connection_element(self, ip, port):
+        print "Add Connection Element"
+        ce = ConnectEntry.load()
+        ce.screen = self
+        self.connect_list.add_widget( ce )
+        ce.target_ip.text = ce.target_ip.text + ip
+        ce.target_port.text = ce.target_port.text + port
+        ce.connect_button.text = "Connect"
+        self.addServer(ip, port, ce)
 
-        if BroadCastReceiver.broadcast_message_received == True:
-            CallbackQueue.run_callback_with_thread_nonblocking()
-            #continue with connection
-            if (ConnectScreen.ip != None): #only if we received an IP from a Broadcast
-                self.connect_callback(instance, ConnectScreen.ip)
+    # Every second this method is called so we can check if we have 
+    def timed_check(self, instance):
+        for key in BroadCastReceiver.Server_list:
+            if key not in self.servers:
+                self.add_connection_element(str(key), str(BroadCastReceiver.Server_list[key][0]))
+
+        keys_to_remove = []
+        # remove all elements that are not in the Broadcast list anymore        
+        for key in self.servers:
+            if key not in BroadCastReceiver.Server_list:
+                keys_to_remove.append(key)
+
+        for key in keys_to_remove:            
+            self.servers[key][1].parent.remove_widget(self.servers[key][1])
+            self.servers.pop(key, None)# remove the value from the dictionary
 
     def fixed_connect_callback(self, instance):
-        self.connect_callback(instance, self.ids["ip"].text)
+        self.connect_to_server(instance, self.ids["ip"].text)
 
-    def connect_callback(self, instance, ip):
+    def connect_to_server(self, instance, ip):
         Config.server_ip = ip
         print("clicked here")
         try:
@@ -339,6 +363,7 @@ class ConnectScreen( Screen ):
             popup.open()
 
 import time
+
 class WebDriverApp(App):
     def build(self):
 
@@ -346,19 +371,16 @@ class WebDriverApp(App):
             os.chdir(sys._MEIPASS)
 
         self.sm = ScreenManager()
-
+ 
         self.sm.add_widget( Builder.load_file("connect_screen.kv") )
         self.sm.add_widget( Builder.load_file("elements_screen.kv") )
 
         return self.sm
 
     def on_stop(self):
-        Config.listening_for_broadcast = False
+        Config.listening_for_broadcast = False        
         delete_req = requests.delete(Config.endpoint_session(""))
-        print("deleting session with id "+Config.session_id)
-        
-
-
+        print "deleting session with id "+Config.session_id 
 
 
 class CallbackQueue():
@@ -381,11 +403,33 @@ class CallbackQueue():
             except Queue.Empty: #raised when queue is empty
                 break
             callback()
+      
 
+class ConnectEntry(StackLayout):
+    target_ip = ObjectProperty(None)
+    target_port = ObjectProperty(None)
+    connect_button = ObjectProperty(None)    
+
+    def __init__(self, **kwargs):
+        super(ConnectEntry, self).__init__(**kwargs)
+
+    @staticmethod
+    def load():
+        return Builder.load_file('connect_entry.kv')
+
+    def connect_to_server_callback(self, instance):
+        print "try to connect to a certain server ip: " + self.target_ip.text + " and port: " + self.target_port.text
+        self.screen.connect_to_server(None, self.target_ip.text)
+
+        
+    
+from threading import Lock
 class BroadCastReceiver():
-    #serverSock = socket
+
     broadcast_message_received = False
     EventOneTimeListener = Queue.Queue()
+
+    Server_list = {}
 
     def Listener(self):
         print "Starting Loop:"
@@ -394,26 +438,34 @@ class BroadCastReceiver():
             try:
                 data, addr = self.serverSock.recvfrom(1024)            
             except socket.timeout:
+                #check for Server Expiration. 
+                mutex.acquire(True)
+                self.CheckServerExpiration()
+                mutex.release()
                 continue
             #print "Message: ", data, addr
-            if (cmp(data, UDP_LISTENING_FOR_STRING) == 0 and BroadCastReceiver.broadcast_message_received == False): #broadcast received
-                BroadCastReceiver.broadcast_message_received = True
-                CallbackQueue.queue_callback_on_thread(lambda: BroadCastReceiver.Listener_Callback(data, addr))
-                Config.listening_for_broadcast = False
+            if (cmp(data, UDP_LISTENING_FOR_STRING) == 0 ):                 
+                mutex.acquire(True)
+                self.Server_list[addr[0]] = [addr[1], time.time()]
+                print "updating ip in list: " + addr[0]         
+                self.CheckServerExpiration()       
+                mutex.release()
     
-    @staticmethod
-    def Listener_Callback(data, addr):
-        # add code to pass data on the main Thread
-        print "Message: ", data, addr
-        BroadCastReceiver.broadcast_message_received = False
-        while True:
-            try:
-                callback = BroadCastReceiver.EventOneTimeListener.get(False)
-            except Queue.Empty: #raised when queue is empty
-                break
-            callback(addr)
+    # remove old Server Values from list
+    def CheckServerExpiration(self):
+        t = time.time()
+        keys_to_remove = []
 
-    def __init__(self):
+        for key in self.Server_list:
+            if (t - self.Server_list[key][1] > SERVER_BLACKOUT_TIME):
+                keys_to_remove.append(key)
+
+        for key in keys_to_remove:
+            self.Server_list.pop(key, None) # remove the value from the dictionary
+
+    def __init__(self):        
+        global mutex
+        mutex = Lock()
         self.serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.serverSock.bind(('', UDP_BROADCAST_PORT))       
         self.clientThread = threading.Thread(target=self.Listener).start() # start UDP listener on a new thread

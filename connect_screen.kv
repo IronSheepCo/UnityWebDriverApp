@@ -4,25 +4,32 @@
 
 ConnectScreen:
     name:"connect"
+    connect_list:connect_list
     
     StackLayout:
         Label:
             text:"Server ip"
             height:height
-            size_hint: 0.5, None
+            size_hint: 0.35, None
         TextInput:
             id: ip
             height:height
             multiline: False
-            size_hint: 0.5, None
+            size_hint: 0.35, None
             text: "127.0.0.1"
         Button
             height:height
-            size_hint: 0.5, None
+            size_hint: 0.3, None
             text:"Connect to IP"
-            on_press:root.fixed_connect_callback(self) 
-        Button
+            on_press:root.fixed_connect_callback(self)    
+        Label:
+            text:"Server List:"
             height:height
-            size_hint:0.5, None
-            text:"Auto Connect"
-            on_press:root.auto_connect_callback(self)
+            size_hint: 0.35, None  
+        ScrollView:
+            size_hint:1, 1
+            StackLayout:                
+                id:connect_list
+                hide_root: True
+                size_hint:1, None
+                

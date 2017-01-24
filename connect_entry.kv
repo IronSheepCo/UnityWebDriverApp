@@ -1,0 +1,39 @@
+#:kivy 1.0
+
+#:set height 30
+
+ConnectEntry:
+    height:height
+    size_hint:1, None
+
+    target_ip:target_ip
+    target_port:target_port
+    connect_button:connect_button
+
+    BoxLayout:
+        orientation:"horizontal"
+        size_hint:1,1
+
+        Label: 
+            text:"Device Ip: "
+            height:height
+            size_hint:0.2, None
+        Label:
+            id: target_ip
+            text:""
+            height:height
+            size_hint: 0.2, None
+        Label:
+            text:"Port: "
+            height:height
+            size_hint:0.2, None
+        Label:
+            id: target_port
+            text:""
+            height: height
+            size_hint: 0.2, None
+        Button:
+            id:connect_button
+            size_hint:0.3, 1
+            text:"Connect"
+            on_press:root.connect_to_server_callback(self)
