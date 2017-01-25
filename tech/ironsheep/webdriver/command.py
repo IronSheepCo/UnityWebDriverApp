@@ -5,6 +5,7 @@ import time
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
 class Config:
+    session_id = ""
     SESSION_PORT = "4569"
     @staticmethod
     def endpoint(endpoint):
