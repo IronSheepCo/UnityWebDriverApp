@@ -363,6 +363,7 @@ class ConnectScreen( Screen ):
             popup.open()
 
 import time
+from functools import partial
 
 class WebDriverApp(App):
     def build(self):
