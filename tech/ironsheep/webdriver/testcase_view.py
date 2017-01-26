@@ -63,6 +63,16 @@ class TestCaseView(ScrollView):
                          )
 
             alert.open()
+        else:
+            alert_text = "Success"
+            alert = Popup(title="Test case result",
+                          content=Label(text=alert_text,
+                          halign="center",
+                          markup=True),
+                          size_hint=(0.4, 0.4)
+                         )
+
+            alert.open()
 
 
     def load_test_pressed(self, instance):
