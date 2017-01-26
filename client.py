@@ -55,8 +55,9 @@ class WebDriverApp(App):
 
     def on_stop(self):
         BroadCastReceiver.listening_for_broadcast = False
-        delete_req = requests.delete(Config.endpoint_session(""))
-        print "deleting session with id " + Config.session_id
+        if Config.server_ip != "" and Config.server_ip != None:
+            print "deleting session with id " + Config.session_id
+            delete_req = requests.delete(Config.endpoint_session(""))
 
 Factory.register('LoadDialog', cls=LoadDialog)
 Factory.register('SaveDialog', cls=SaveDialog)

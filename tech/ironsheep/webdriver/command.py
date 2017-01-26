@@ -7,6 +7,7 @@ webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 class Config:
     session_id = ""
     SESSION_PORT = "4569"
+    server_ip = ""
     @staticmethod
     def endpoint(endpoint):
         return "http://%s:%s/%s" % (Config.server_ip, Config.SESSION_PORT, endpoint )
