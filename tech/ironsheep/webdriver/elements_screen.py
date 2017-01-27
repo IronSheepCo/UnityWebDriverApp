@@ -33,16 +33,16 @@ class ElementsScreen( Screen ):
 
     def pressed_get_text(self, instance):
         response = Command.attribute( self.text_uuid.text, 'text' )
-        if response["data"] != None:
-            self.response_area.text = response["data"]
+        if response != None:
+            self.response_area.text = response
 
     def pressed_get_name(self, instance):
         print('getting name '+self.text_uuid.text)
         
         response = Command.name( self.text_uuid.text )
         
-        if response["data"] != None:
-            self.response_area.text = response["data"]
+        if response != None:
+            self.response_area.text = response
 
     def pressed_highlight(self, instance):
         print('highlighting '+self.text_uuid.text)
