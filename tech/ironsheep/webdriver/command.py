@@ -7,6 +7,7 @@ webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 class Config:
     session_id = ""
     SESSION_PORT = "4569"
+    server_ip = ""
     @staticmethod
     def endpoint(endpoint):
         return "http://%s:%s/%s" % (Config.server_ip, Config.SESSION_PORT, endpoint )
@@ -39,6 +40,14 @@ class Command:
             return "WaitAndGetName"
         if no == 11:
             return "WaitForVisible"
+        if no == 12:
+            return "AssertText"
+        if no == 13:
+            return "AssertAttribute"
+        if no == 14:
+            return "AssertVisible"
+        if no == 15:
+            return "AssertElement"
         return ""
 
     @staticmethod
@@ -100,6 +109,20 @@ class Command:
                 return Command.name(uuid)
             if no == 9:
                 return Command.is_visible(uuid)
+            if no == 12:
+                return Command.assert_text(uuid, arg)
+            if no == 13:
+                split = arg.split("=")
+                attr = split[0]
+                value = split[1]
+                return Command.assert_attribute(uuid, attr, value)
+            if no == 14:
+                return Command.is_visible(uuid)
+            if no == 15:
+                #this is ok, if the element is not found
+                #we already return false
+                #so this is ok :)
+                return True
             return True
         else:
             return False
@@ -200,6 +223,16 @@ class Command:
         endpoint = 'element/'+uuid+'/visible'
         response = requests.get( Config.endpoint_session(endpoint) )
         return response.json()["data"]
+
+    @staticmethod
+    def assert_text(uuid, text_to_check):
+       text = Command.attribute( uuid, "text")
+       return text == text_to_check
+
+    @staticmethod
+    def assert_attribute(uuid, attr_name, attr_value):
+        value = Command.attribute( uuid, attr_name )
+        return value == attr_value
 
     @staticmethod
     def wait_for_visible(xpath, timeout = 30):

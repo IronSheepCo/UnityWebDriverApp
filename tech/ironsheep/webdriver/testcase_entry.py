@@ -21,6 +21,7 @@ class TestCaseEntry(StackLayout, TreeViewNode):
 
     def __init__(self, **kwargs):
         super(TestCaseEntry, self).__init__(**kwargs)
+        self.color_selected = [ 0.333, 0.251, 0.467 ,1]
 
     @staticmethod
     def load():

@@ -50,11 +50,9 @@ class TestCaseView(ScrollView):
     def on_test_case_list(self, instance, value):
         self.test_case_list.bind(minimum_height=self.test_case_list.setter('height') )
     
-    def run_test_case(self, instance):
-        print( "running test case")
-        result = self.test_case.run()
-        if result != True:
-            alert_text = "Test case failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(result.no,result.target)
+    def _test_case_run_step_result(self, status, info):
+        if status == False:
+            alert_text = "Test case failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(info.no, info.target)
             alert = Popup(title="Error running test case",
                           content=Label(text=alert_text,
                           halign="center",
@@ -63,7 +61,24 @@ class TestCaseView(ScrollView):
                          )
 
             alert.open()
+        else:
+            if info is None:
+                alert_text = "Success"
+                alert = Popup(title="Test case result",
+                              content=Label(text=alert_text,
+                              halign="center",
+                              markup=True),
+                              size_hint=(0.4, 0.4)
+                             )
 
+                alert.open()
+            else:
+                node_to_select = self.test_case_list.root.nodes[ info.no - 1 ]
+                self.test_case_list.select_node( node_to_select )
+
+    def run_test_case(self, instance):
+        print( "running test case")
+        self.test_case.run(self._test_case_run_step_result)
 
     def load_test_pressed(self, instance):
         print "loading test case"
