@@ -7,19 +7,25 @@ TestCaseEntry:
 
     target_input:target_input
     command_button:command_button
+    remove_button:remove_button
     arg_input:arg_input
 
     StackLayout:
         Button:
             id:command_button
-            size_hint:0.25, 1
+            size_hint:0.20, 1
             text:"Command"
             on_press:root.show_commands(self)
         TextInput:
             id:target_input
-            size_hint:0.5, 1
+            size_hint:0.45, 1
             text:"target"
         TextInput:
             id:arg_input
-            size_hint:0.25, 1
+            size_hint:0.20, 1
             text:""
+        Button:
+            id:remove_button
+            size_hint:0.10, 1
+            text:"Del"
+            on_press:root.remove_step()

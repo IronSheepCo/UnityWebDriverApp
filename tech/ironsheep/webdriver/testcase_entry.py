@@ -15,7 +15,9 @@ class TestCaseEntry(StackLayout, TreeViewNode):
     target_input = ObjectProperty(None)
     command_button = ObjectProperty(None)
     arg_input = ObjectProperty(None)
+    remove_button = ObjectProperty(None)
     step = None
+    parent_testcase_view = None
 
     def __init__(self, **kwargs):
         super(TestCaseEntry, self).__init__(**kwargs)
@@ -81,3 +83,8 @@ class TestCaseEntry(StackLayout, TreeViewNode):
             self.target_input.text = self.step.target
         if self.step.arg != "":
             self.arg_input.text = self.step.arg
+
+    def remove_step(self):
+        self.parent.remove_widget(self)
+        self.parent_testcase_view.test_case.steps.remove(self.step)
+        self.parent_testcase_view.test_case_list.remove_node(self)

@@ -82,6 +82,7 @@ class TestCaseView(ScrollView):
     def add_step_view(self, step):
         tce = TestCaseEntry.load()
         tce.step = step
+        tce.parent_testcase_view = self
         self.test_case_list.add_node(tce)
         tce.load_from_step()
         tce.move_cursor()
