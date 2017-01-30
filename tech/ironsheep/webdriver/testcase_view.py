@@ -75,6 +75,11 @@ class TestCaseView(ScrollView):
             else:
                 node_to_select = self.test_case_list.root.nodes[ info.no - 1 ]
                 self.test_case_list.select_node( node_to_select )
+                #scrolling to current tree view node
+                #for an unkown reason the widgets in the treeview
+                #need to be reversed to get the desired behaviour
+                total_nodes = len(self.test_case_list.root.nodes)
+                self.test_case_list.parent.scroll_to( self.test_case_list.children[ total_nodes - info.no ] )
 
     def run_test_case(self, instance):
         print( "running test case")
