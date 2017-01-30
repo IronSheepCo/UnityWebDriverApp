@@ -56,15 +56,15 @@ ElementsScreen:
         Label:
             text:"Response results"
             height:height
-            size_hint:0.5, None
+            size_hint:0.4, None
 
         Label:
             text:"Current test case"
             height:height
-            size_hint:0.5, None
+            size_hint:0.6, None
 
         ScrollView:
-            size_hint:0.5, 0.5
+            size_hint:0.4, 0.5
             
             TreeView:
                 id:query_response
@@ -74,7 +74,7 @@ ElementsScreen:
         TestCaseView:
             id:test_case_view
             test_case_list:test_case_list
-            size_hint:0.5, 0.5
+            size_hint:0.6, 0.5
 
             BoxLayout:
                 size_hint:1, 1

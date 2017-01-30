@@ -89,3 +89,67 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         self.parent.remove_widget(self)
         self.parent_testcase_view.test_case.steps.remove(self.step)
         self.parent_testcase_view.test_case_list.remove_node(self)
+
+    def move_up(self):
+        index = self.parent_testcase_view.test_case.steps.index(self.step)
+        if index > 0:
+
+            node_command = self.parent_testcase_view.test_case_list.root.nodes[index-1].command_button.text
+            node_input = self.parent_testcase_view.test_case_list.root.nodes[index-1].target_input.text
+            node_arg_input = self.parent_testcase_view.test_case_list.root.nodes[index-1].arg_input.text
+
+
+            self.parent_testcase_view.test_case_list.root.nodes[index-1].command_button.text = self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text
+            self.parent_testcase_view.test_case_list.root.nodes[index-1].target_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text
+            self.parent_testcase_view.test_case_list.root.nodes[index-1].arg_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text
+
+            self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text = node_command
+            self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text = node_input
+            self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text = node_arg_input
+
+            val1 = self.parent_testcase_view.test_case.steps[index-1]
+            val2 = self.parent_testcase_view.test_case.steps[index]
+
+            temp_command = self.parent_testcase_view.test_case.steps[index-1].command
+            temp_target = self.parent_testcase_view.test_case.steps[index-1].target
+            temp_arg = self.parent_testcase_view.test_case.steps[index-1].arg
+
+            val1.command = val2.command
+            val1.target = val2.target
+            val1.arg = val2.arg
+
+            val2.command = temp_command
+            val2.target = temp_target
+            val2.arg = temp_arg
+
+    def move_down(self):
+        index = self.parent_testcase_view.test_case.steps.index(self.step)
+        if index < len(self.parent_testcase_view.test_case.steps)-1:
+
+            node_command = self.parent_testcase_view.test_case_list.root.nodes[index+1].command_button.text
+            node_input = self.parent_testcase_view.test_case_list.root.nodes[index+1].target_input.text
+            node_arg_input = self.parent_testcase_view.test_case_list.root.nodes[index+1].arg_input.text
+
+
+            self.parent_testcase_view.test_case_list.root.nodes[index+1].command_button.text = self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text
+            self.parent_testcase_view.test_case_list.root.nodes[index+1].target_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text
+            self.parent_testcase_view.test_case_list.root.nodes[index+1].arg_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text
+
+            self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text = node_command
+            self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text = node_input
+            self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text = node_arg_input
+
+            val1 = self.parent_testcase_view.test_case.steps[index+1]
+            val2 = self.parent_testcase_view.test_case.steps[index]
+
+            temp_command = self.parent_testcase_view.test_case.steps[index+1].command
+            temp_target = self.parent_testcase_view.test_case.steps[index+1].target
+            temp_arg = self.parent_testcase_view.test_case.steps[index+1].arg
+
+            val1.command = val2.command
+            val1.target = val2.target
+            val1.arg = val2.arg
+
+            val2.command = temp_command
+            val2.target = temp_target
+            val2.arg = temp_arg
