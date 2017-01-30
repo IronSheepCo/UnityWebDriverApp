@@ -142,14 +142,22 @@ class Command:
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
         return response.json()
-    
+   
+    @staticmethod
+    def _check_for_data( json_data ):
+        if "data" in json_data:
+            return json_data["data"]
+        else:
+            return json_data["message"]
+
     @staticmethod
     def attribute(uuid,name):
         endpoint = 'element/'+uuid+'/attribute/'+name
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
-        print( response.json() )
-        return response.json()["data"]
+        json_response = response.json()
+        print( json_response )
+        return Command._check_for_data( json_response )
 
     @staticmethod
     def send_keys(uuid, keys):
@@ -166,7 +174,7 @@ class Command:
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
-        return response.json()["data"]
+        return Command._check_for_data( response.json() )
 
     @staticmethod
     def timeouts( implicit=-1, page_load=-1, script=-1):
@@ -222,7 +230,7 @@ class Command:
     def is_visible(uuid):
         endpoint = 'element/'+uuid+'/visible'
         response = requests.get( Config.endpoint_session(endpoint) )
-        return response.json()["data"]
+        return Command._check_for_data( response.json() )
 
     @staticmethod
     def assert_text(uuid, text_to_check):
