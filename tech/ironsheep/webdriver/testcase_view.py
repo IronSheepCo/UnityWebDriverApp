@@ -88,7 +88,7 @@ class TestCaseView(ScrollView):
     def load_test_pressed(self, instance):
         print "loading test case"
         content = LoadDialog(load=self.load, cancel=self.cancel)
-        self._popup = Popup(title="Save test case", content=content,
+        self._popup = Popup(title="Load test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
 
