@@ -21,6 +21,7 @@ import json
 import sys
 import types
 import os
+import traceback
 
 import Queue
 import threading
@@ -64,5 +65,16 @@ Factory.register('SaveDialog', cls=SaveDialog)
 
 if __name__ == '__main__':
     BroadCastReceiver() #start UDP client - move it on the Connect Button ?
-    WebDriverApp().run()
+    try:
+        #catch unhandled exception
+        WebDriverApp().run()
+    except Exception as e:
+        print("Stoping beacause of uncaught exception")
+        print(e)
+        print(traceback.print_exc())
+        #allow app to finish gracefully
+        #usually useful for closing 
+        #the current web driver session
+        App.get_running_app().stop()
+
 
