@@ -94,18 +94,21 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         index = self.parent_testcase_view.test_case.steps.index(self.step)
         if index > 0:
 
-            node_command = self.parent_testcase_view.test_case_list.root.nodes[index-1].command_button.text
-            node_input = self.parent_testcase_view.test_case_list.root.nodes[index-1].target_input.text
-            node_arg_input = self.parent_testcase_view.test_case_list.root.nodes[index-1].arg_input.text
+            prevNode = self.parent_testcase_view.test_case_list.root.nodes[index-1]
+            currentNode = self.parent_testcase_view.test_case_list.root.nodes[index]
+
+            node_command = prevNode.command_button.text
+            node_input = prevNode.target_input.text
+            node_arg_input = prevNode.arg_input.text
 
 
-            self.parent_testcase_view.test_case_list.root.nodes[index-1].command_button.text = self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text
-            self.parent_testcase_view.test_case_list.root.nodes[index-1].target_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text
-            self.parent_testcase_view.test_case_list.root.nodes[index-1].arg_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text
+            prevNode.command_button.text = currentNode.command_button.text
+            prevNode.target_input.text = currentNode.target_input.text
+            prevNode.arg_input.text = currentNode.arg_input.text
 
-            self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text = node_command
-            self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text = node_input
-            self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text = node_arg_input
+            currentNode.command_button.text = node_command
+            currentNode.target_input.text = node_input
+            currentNode.arg_input.text = node_arg_input
 
             val1 = self.parent_testcase_view.test_case.steps[index-1]
             val2 = self.parent_testcase_view.test_case.steps[index]
@@ -126,25 +129,28 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         index = self.parent_testcase_view.test_case.steps.index(self.step)
         if index < len(self.parent_testcase_view.test_case.steps)-1:
 
-            node_command = self.parent_testcase_view.test_case_list.root.nodes[index+1].command_button.text
-            node_input = self.parent_testcase_view.test_case_list.root.nodes[index+1].target_input.text
-            node_arg_input = self.parent_testcase_view.test_case_list.root.nodes[index+1].arg_input.text
+            nextNode = self.parent_testcase_view.test_case_list.root.nodes[index+1]
+            currentNode = self.parent_testcase_view.test_case_list.root.nodes[index]
+
+            node_command = nextNode.command_button.text
+            node_input = nextNode.target_input.text
+            node_arg_input = nextNode.arg_input.text
 
 
-            self.parent_testcase_view.test_case_list.root.nodes[index+1].command_button.text = self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text
-            self.parent_testcase_view.test_case_list.root.nodes[index+1].target_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text
-            self.parent_testcase_view.test_case_list.root.nodes[index+1].arg_input.text = self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text
+            nextNode.command_button.text = currentNode.command_button.text
+            nextNode.target_input.text = currentNode.target_input.text
+            nextNode.arg_input.text = currentNode.arg_input.text
 
-            self.parent_testcase_view.test_case_list.root.nodes[index].command_button.text = node_command
-            self.parent_testcase_view.test_case_list.root.nodes[index].target_input.text = node_input
-            self.parent_testcase_view.test_case_list.root.nodes[index].arg_input.text = node_arg_input
+            currentNode.command_button.text = node_command
+            currentNode.target_input.text = node_input
+            currentNode.arg_input.text = node_arg_input
 
             val1 = self.parent_testcase_view.test_case.steps[index+1]
             val2 = self.parent_testcase_view.test_case.steps[index]
 
-            temp_command = self.parent_testcase_view.test_case.steps[index+1].command
-            temp_target = self.parent_testcase_view.test_case.steps[index+1].target
-            temp_arg = self.parent_testcase_view.test_case.steps[index+1].arg
+            temp_command = val1.command
+            temp_target = val1.target
+            temp_arg = val1.arg
 
             val1.command = val2.command
             val1.target = val2.target
