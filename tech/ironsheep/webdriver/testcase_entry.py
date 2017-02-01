@@ -94,6 +94,16 @@ class TestCaseEntry(StackLayout, TreeViewNode):
         index = self.parent_testcase_view.test_case.steps.index(self.step)
         if index > 0:
 
+            val1 = self.parent_testcase_view.test_case.steps[index-1]
+            val2 = self.parent_testcase_view.test_case.steps[index]
+
+            self.parent_testcase_view.test_case.steps[index] = val1
+            self.parent_testcase_view.test_case.steps[index-1] = val2
+
+            list_length = len(self.parent_testcase_view.test_case_list.children)
+            self.parent_testcase_view.test_case_list.children[list_length-index-1].step = val1
+            self.parent_testcase_view.test_case_list.children[list_length-index].step = val2
+
             prevNode = self.parent_testcase_view.test_case_list.root.nodes[index-1]
             currentNode = self.parent_testcase_view.test_case_list.root.nodes[index]
 
@@ -109,15 +119,20 @@ class TestCaseEntry(StackLayout, TreeViewNode):
             currentNode.target_input.text = node_input
             currentNode.arg_input.text = node_arg_input
 
-            val1 = self.parent_testcase_view.test_case.steps[index-1]
-            val2 = self.parent_testcase_view.test_case.steps[index]
-
-            self.parent_testcase_view.test_case_list.children[index].step = val1
-            self.parent_testcase_view.test_case_list.children[index-1].step = val2
 
     def move_down(self):
         index = self.parent_testcase_view.test_case.steps.index(self.step)
         if index < len(self.parent_testcase_view.test_case.steps)-1:
+
+            val1 = self.parent_testcase_view.test_case.steps[index+1]
+            val2 = self.parent_testcase_view.test_case.steps[index]
+
+            self.parent_testcase_view.test_case.steps[index] = val1
+            self.parent_testcase_view.test_case.steps[index+1] = val2
+
+            list_length = len(self.parent_testcase_view.test_case_list.children)
+            self.parent_testcase_view.test_case_list.children[list_length-index-1].step = val1
+            self.parent_testcase_view.test_case_list.children[list_length-index-2].step = val2
 
             nextNode = self.parent_testcase_view.test_case_list.root.nodes[index+1]
             currentNode = self.parent_testcase_view.test_case_list.root.nodes[index]
@@ -133,9 +148,3 @@ class TestCaseEntry(StackLayout, TreeViewNode):
             currentNode.command_button.text = node_command
             currentNode.target_input.text = node_input
             currentNode.arg_input.text = node_arg_input
-
-            val1 = self.parent_testcase_view.test_case.steps[index+1]
-            val2 = self.parent_testcase_view.test_case.steps[index]
-
-            self.parent_testcase_view.test_case_list.children[index].step = val1
-            self.parent_testcase_view.test_case_list.children[index+1].step = val2
