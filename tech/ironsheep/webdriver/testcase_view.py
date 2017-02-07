@@ -27,6 +27,7 @@ class TestCaseView(ScrollView):
             nodes.append( node )
         for node in nodes:
             self.test_case_stack.remove_widget( node )
+            self.test_case.steps.remove(node.step)
 
     def save(self, path, filename):
         with open( os.path.join(path, filename), "w" ) as stream:
@@ -41,10 +42,10 @@ class TestCaseView(ScrollView):
         #clearing existing test case
         self.clear()
 
-        self.test_case = TestCase.loadFromJson( content )
+        self.test_case = TestCase.loadFromJson(content)
 
-        for step in self.test_case.steps:
-            self.add_stack_step_view( step )
+        for step in reversed(self.test_case.steps):
+            self.add_stack_step_view(step)
 
         self._popup.dismiss()
         
@@ -73,9 +74,9 @@ class TestCaseView(ScrollView):
             else:
                 stack_len = len(self.test_case_stack.children)
                 node_to_select = self.test_case_stack.children[info.no]
-                self.test_case_stack.children[info.no].on_focus(None, True)
+                self.test_case_stack.children[info.no].target_input.focus = True#.on_focus(None, True)
                 if info.no < stack_len-1:
-                    self.test_case_stack.children[info.no+1].on_focus(None, False)
+                    self.test_case_stack.children[info.no+1].target_input.focus = False#.on_focus(None, False)
                 
                 #self.test_case_list.select_node( node_to_select )
 
@@ -118,7 +119,7 @@ class TestCaseView(ScrollView):
         self.test_case_stack.add_widget(tce, index)
 
         tce.load_from_step()
-        tce.move_cursor()
+        tce.target_input.focus = True#.move_cursor()
 
     def add_step(self, instance):
         print "adding step"
