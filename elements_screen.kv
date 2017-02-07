@@ -73,7 +73,7 @@ ElementsScreen:
 
         TestCaseView:
             id:test_case_view
-            test_case_list:test_case_list
+            test_case_stack:test_case_stack
             size_hint:0.6, 0.5
 
             BoxLayout:
@@ -107,10 +107,12 @@ ElementsScreen:
 
                 ScrollView:
                     size_hint:1, 1
-                    TreeView:
+                    StackLayout:
                         hide_root: True
-                        size_hint:1, None
-                        id:test_case_list
+                        size_hint: 0.95, None
+                        id:test_case_stack
+                        height:self.minimum_height
+
                         
         Label:
             text:"Test zone"

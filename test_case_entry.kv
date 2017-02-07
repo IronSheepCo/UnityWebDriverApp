@@ -3,40 +3,39 @@
 #:set height 30
 
 TestCaseEntry:
-    height:height
-
+    height: height
+    size_hint: 1, None
     target_input:target_input
     command_button:command_button
     remove_button:remove_button
     arg_input:arg_input
-
-    StackLayout:
-        Button:
-            id:up_button
-            text:'Up'
-            size_hint:0.075, 1
-            on_press:root.move_up()
-            
-        Button:
-            id:down_button
-            text:'Dn'
-            size_hint:0.075, 1
-            on_press:root.move_down()
-        Button:
-            id:command_button
-            size_hint:0.2, 1
-            text:"Command"
-            on_press:root.show_commands(self)
-        TextInput:
-            id:target_input
-            size_hint:0.35, 1
-            text:"target"
-        TextInput:
-            id:arg_input
-            size_hint:0.20, 1
-            text:""
-        Button:
-            id:remove_button
-            size_hint:0.1, 1
-            text:"Del"
-            on_press:root.remove_step()
+        
+    Button:
+        id:up_button
+        text:'Up'
+        size_hint:0.075, 1
+        on_press:root.move_up()
+        
+    Button:
+        id:down_button
+        text:'Dn'
+        size_hint:0.075, 1
+        on_press:root.move_down()
+    Button:
+        id:command_button
+        size_hint:0.2, 1
+        text:"Command"
+        on_press:root.show_commands(self)
+    TextInput:
+        id:target_input
+        size_hint:0.35, 1
+        text:"target"
+    TextInput:
+        id:arg_input
+        size_hint:0.20, 1
+        text:""
+    Button:
+        id:remove_button
+        size_hint:0.1, 1
+        text:"Del"
+        on_press:root.remove_step()

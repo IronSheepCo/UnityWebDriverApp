@@ -29,8 +29,8 @@ class TestCase:
         self.running_thread = None
         self.test_case_callback = None
     
-    def addStep(self, step):
-        self.steps.append( step )
+    def addStep(self, step, index):
+        self.steps.insert(index, step)
 
     def flatten(self):
         ret = {}
@@ -43,10 +43,12 @@ class TestCase:
         return json.dumps( self.flatten() )
 
     def _run_blocking(self):
-        step_no = 0
+        
+        step_len = len(self.steps)
+        step_no = step_len
         print('starting running test case blocking')
-        for step in self.steps:
-            step_no = step_no + 1
+        for step in reversed(self.steps):
+            step_no = step_no - 1
 
             step.no = step_no
             
@@ -95,6 +97,6 @@ class TestCase:
         
         for step in dec["steps"]:
             st = TestCaseStep.loadFromFlattent( step )
-            ret.addStep( st )
+            ret.addStep( st, 0 )
 
         return ret
