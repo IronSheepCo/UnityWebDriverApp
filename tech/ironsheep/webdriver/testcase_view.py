@@ -50,13 +50,15 @@ class TestCaseView(ScrollView):
         self._popup.dismiss()
         
     def _test_case_run_step_result(self, status, info):
-        if status == False:
-            alert_text = "Test case failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(info.no, info.target)
+        if status is False:
+            stack_len = len(self.test_case_stack.children)
+            alert_text = "Test case failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(stack_len-info.no, info.target)
+
             alert = Popup(title="Error running test case",
                           content=Label(text=alert_text,
                           halign="center",
                           markup=True),
-                          size_hint=(0.75, 0.75)
+                          size_hint=(0.5, 0.5)
                          )
 
             alert.open()
@@ -74,18 +76,13 @@ class TestCaseView(ScrollView):
             else:
                 stack_len = len(self.test_case_stack.children)
                 node_to_select = self.test_case_stack.children[info.no]
-                self.test_case_stack.children[info.no].target_input.focus = True#.on_focus(None, True)
+
+                #print "try to focus"
+                self.test_case_stack.children[info.no].on_focus(None, True)
                 if info.no < stack_len-1:
-                    self.test_case_stack.children[info.no+1].target_input.focus = False#.on_focus(None, False)
-                
-                #self.test_case_list.select_node( node_to_select )
+                    self.test_case_stack.children[info.no+1].on_focus(None, False)
 
-                #scrolling to current tree view node
-                #for an unkown reason the widgets in the treeview
-                #need to be reversed to get the desired behaviour
-
-                #total_nodes = len(self.test_case_stack.children)
-                self.test_case_stack.parent.scroll_to( self.test_case_stack.children[ info.no ] )
+                self.test_case_stack.parent.scroll_to(self.test_case_stack.children[ info.no ])
 
     def run_test_case(self, instance):
         print( "running test case")
