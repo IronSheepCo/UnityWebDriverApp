@@ -35,7 +35,7 @@ class TestCase:
     def flatten(self):
         ret = {}
         ret["name"] = "Test case name"
-        ret["steps"] = [ step.flatten() for step in self.steps if step.command != "" ]
+        ret["steps"] = [ step.flatten() for step in reversed(self.steps) if step.command != "" ]
         
         return ret
 
