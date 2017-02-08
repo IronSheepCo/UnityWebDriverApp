@@ -58,7 +58,7 @@ class TestCaseView(ScrollView):
                           content=Label(text=alert_text,
                           halign="center",
                           markup=True),
-                          size_hint=(0.5, 0.5)
+                          size_hint=(0.6, 0.5)
                          )
 
             alert.open()
