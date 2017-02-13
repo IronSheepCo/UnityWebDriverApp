@@ -52,7 +52,10 @@ class ElementsScreen( Screen ):
     def run_query_callback(self, instance):
         print("running xpath query "+self.xpath_query.text)
         xpath_req = Command.run_query( self.xpath_query.text )
-        print(xpath_req.json())
+        #using strict=False as some elements
+        #could have invalid characters in properties
+        json_response = xpath_req.json(strict=False)
+        print(json_response)
         #clean the tree view
         nodes = []
         for node in self.query_response.iterate_all_nodes():
@@ -60,7 +63,7 @@ class ElementsScreen( Screen ):
         for node in nodes:
             self.query_response.remove_node( node )
         #populate the tree view
-        for el in xpath_req.json()["data"]:
+        for el in json_response["data"]:
             node = self.query_response.add_node( TreeViewTextInput(text=el["name"], is_open=False ) )
             self.query_response.add_node( TreeViewTextInput(text="uuid: %s"%el[webelement_key_id], multilin=False), node)
             for key in el:
