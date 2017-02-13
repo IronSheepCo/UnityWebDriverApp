@@ -9,6 +9,7 @@ ConnectEntry:
     target_ip:target_ip
     target_port:target_port
     target_name:target_name
+    target_device_id:target_device_id
     connect_button:connect_button
 
     BoxLayout:
@@ -18,32 +19,41 @@ ConnectEntry:
         Label: 
             text:"Device Ip: "
             height:height
-            size_hint:0.1, None
+            size_hint:0.05, None
         Label:
             id: target_ip
             text:""
             height:height
-            size_hint: 0.2, None
+            size_hint: 0.1, None
         Label:
             text:"Port: "
             height:height
-            size_hint:0.1, None
+            size_hint:0.05, None
         Label:
             id: target_port
             text:""
             height: height
-            size_hint: 0.1, None
+            size_hint: 0.05, None
         Label:
             text:"Name: "
             height:height
-            size_hint:0.1, None
+            size_hint:0.05, None
         Label:
             id: target_name
             text:""
             height: height
-            size_hint: 0.2, None
+            size_hint: 0.15, None
+        Label:
+            text:"ID: "
+            height:height
+            size_hint:0.05, None
+        Label:
+            id: target_device_id
+            text:""
+            height: height
+            size_hint: 0.35, None
         Button:
             id:connect_button
-            size_hint:0.2, 1
+            size_hint:0.15, 1
             text:"Connect"
             on_press:root.connect_to_server_callback(self)

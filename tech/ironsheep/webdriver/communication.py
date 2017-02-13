@@ -33,13 +33,17 @@ class BroadCastReceiver():
             if UDP_LISTENING_FOR_STRING in data:
                 val = data.split("+++")
                 name = ""
-                if len(val) > 1:
-                    name = val[len(val)-1]
-                else:
-                    name = ""
+                device_id = ""
+                counter = 0
+                for element in val:
+                    if counter is 1:
+                        device_id = element
+                    elif counter is 2:
+                        name = element
+                    counter += 1
 
                 mutex.acquire(True)
-                self.Server_list[addr[0]] = [addr[1], time.time(), name]
+                self.Server_list[addr[0]] = [addr[1], time.time(), name, device_id]
                 print "updating ip in list: " + addr[0]
                 self.CheckServerExpiration()
                 mutex.release()

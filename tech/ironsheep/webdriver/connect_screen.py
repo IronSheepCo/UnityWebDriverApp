@@ -35,7 +35,7 @@ class ConnectScreen( Screen ):
     def addServer(self, ip, port, connectEntry):
         self.servers[ip] = [port, connectEntry]
 
-    def add_connection_element(self, ip, port, name):
+    def add_connection_element(self, ip, port, name, device_id):
         print "Add Connection Element"
         ce = ConnectEntry.load()
         ce.screen = self
@@ -43,6 +43,7 @@ class ConnectScreen( Screen ):
         ce.target_ip.text = ce.target_ip.text + ip
         ce.target_port.text = ce.target_port.text + port
         ce.target_name.text = ce.target_name.text + name
+        ce.target_device_id.text = ce.target_device_id.text + device_id
         
         ce.connect_button.text = "Connect"
         self.addServer(ip, port, ce)
@@ -51,7 +52,7 @@ class ConnectScreen( Screen ):
     def timed_check(self, instance):
         for key in BroadCastReceiver.Server_list:
             if key not in self.servers:
-                self.add_connection_element(str(key), str(BroadCastReceiver.Server_list[key][0]), str(BroadCastReceiver.Server_list[key][2]))
+                self.add_connection_element(str(key), str(BroadCastReceiver.Server_list[key][0]), str(BroadCastReceiver.Server_list[key][2]), str(BroadCastReceiver.Server_list[key][3]))
 
         keys_to_remove = []
         # remove all elements that are not in the Broadcast list anymore        
