@@ -18,6 +18,7 @@ class ElementsScreen( Screen ):
     text_uuid = ObjectProperty(None)
     extra_param = ObjectProperty(None)
     response_area = ObjectProperty(None)
+    test_case_view = ObjectProperty(None)
     
     def pressed_click(self, instance):
         print('clicking element '+self.text_uuid.text)
@@ -73,6 +74,8 @@ class ElementsScreen( Screen ):
         self.xpath_query.text = "//uibutton"
         
     def disconnect_from_app(self, instance):
+        self.test_case_view.clear()
+        
         print "Try to disconnect"
         #Config.server_ip = "127.0.0.1"
         
