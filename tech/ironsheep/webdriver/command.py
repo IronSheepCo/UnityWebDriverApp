@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import subprocess
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
@@ -48,6 +49,8 @@ class Command:
             return "AssertVisible"
         if no == 15:
             return "AssertElement"
+        if no == 16:
+            return "RunShellScript"
         return ""
 
     @staticmethod
@@ -55,40 +58,44 @@ class Command:
         timeout = 30
 
         if no == 5:
-            time.sleep( float(xpath_query) )
+            time.sleep(float(xpath_query))
             return True
         if no == 6:
             try:
                 timeout = float(arg)
             except ValueError:
                 pass
-            return Command.wait_for_element( xpath_query, timeout )
+            return Command.wait_for_element(xpath_query, timeout)
         if no == 7:
             try:
                 timeout = float(arg)
             except ValueError:
                 pass
-            return Command.wait_and_click( xpath_query, timeout )
+            return Command.wait_and_click(xpath_query, timeout)
         if no == 8:
             try:
                 timeout = float(arg)
             except ValueError:
                 pass
-            return Command.wait_and_get_text( xpath_query, timeout )
+            return Command.wait_and_get_text(xpath_query, timeout)
         if no == 10:
             try:
                 timeout = float(arg)
             except ValueError:
                 pass
-            return Command.wait_and_get_name( xpath_query, timeout )
+            return Command.wait_and_get_name(xpath_query, timeout)
         if no == 11:
             try:
                 timeout = float(arg)
             except ValueError:
                 pass
-            return Command.wait_for_visible( xpath_query, timeout )
+            return Command.wait_for_visible(xpath_query, timeout)
+        if no == 16:
+            if arg is None: t = timeout
+            else: t = arg
+            return Command.run_shell_script(xpath_query, t)
 
-        response = Command.run_query( xpath_query ).json()
+        response = Command.run_query(xpath_query).json()
 
         if "data" in response:
             if len(response["data"]) == 0:
@@ -98,13 +105,13 @@ class Command:
 
             el = response["data"][0]
             uuid = el[webelement_key_id]
-            
+
             if no == 1:
-                Command.click( uuid )
+                Command.click(uuid)
             if no == 2:
-                return Command.attribute( uuid, "text" )
+                return Command.attribute(uuid, "text")
             if no == 3:
-                return Command.attribute( uuid, arg )
+                return Command.attribute(uuid, arg)
             if no == 4:
                 return Command.name(uuid)
             if no == 9:
@@ -126,7 +133,7 @@ class Command:
             return True
         else:
             return False
-        
+
         return False
 
     @staticmethod
@@ -272,4 +279,14 @@ class Command:
         response = requests.get( Config.endpoint_session(endpoint) )
         print( response.json() )
         return response.json()
+
+    @staticmethod
+    def run_shell_script(script="ls", timeouts=30):
+        try:
+            p = subprocess.check_call(script, shell=True)
+        except subprocess.CalledProcessError as e:
+            print "Shell Script received an error:"
+            print e.cmd
+            return False
+        return True
     
