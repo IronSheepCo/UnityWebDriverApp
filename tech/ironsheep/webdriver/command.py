@@ -2,6 +2,8 @@ import requests
 import json
 import time
 import subprocess
+import threading
+from threading import Lock
 
 webelement_key_id = "element-6066-11e4-a52e-4f735466cecf"
 
@@ -91,8 +93,8 @@ class Command:
                 pass
             return Command.wait_for_visible(xpath_query, timeout)
         if no == 16:
-            if arg is None: t = timeout
-            else: t = arg
+            if arg == "": t = float(timeout)
+            else: t = float(arg)
             return Command.run_shell_script(xpath_query, t)
 
         response = Command.run_query(xpath_query).json()
@@ -282,11 +284,38 @@ class Command:
 
     @staticmethod
     def run_shell_script(script="ls", timeouts=30):
+        global shell_cmd_mutex
+        global shell_cmd_status
+        shell_cmd_mutex = Lock()
+        shell_cmd_status = True
+
+        waitingTime = 0
+        scriptThread = threading.Thread(target=Command.do_run_shell_script, args=[script, timeouts]).start()
+        while waitingTime<timeouts and shell_cmd_mutex.locked() is True:
+            time.sleep(0.5)
+            waitingTime += 0.5
+        
+        if shell_cmd_mutex.locked():
+            shell_cmd_mutex.release()
+            scriptThread.exit()
+            return False
+        else:
+            return shell_cmd_status is True #force it to return value not reference
+
+        if scriptThread.isAlive():
+            print "it is Alive!!!"
+            scriptThread._stop()
+
+    @staticmethod
+    def do_run_shell_script(script, timeouts):
         try:
+            shell_cmd_mutex.acquire(True)
             p = subprocess.check_call(script, shell=True)
         except subprocess.CalledProcessError as e:
             print "Shell Script received an error:"
             print e.cmd
-            return False
-        return True
+            shell_cmd_status = False
+
+        shell_cmd_mutex.release()
+
     
