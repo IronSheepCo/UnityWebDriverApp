@@ -310,7 +310,7 @@ class Command:
     def do_run_shell_script(script, timeouts):
         try:
             shell_cmd_mutex.acquire(True)
-            p = subprocess.check_call(script, shell=True)
+            p = subprocess.check_call(script, cwd=str(Command.appDir), shell=True)
         except subprocess.CalledProcessError as e:
             print "Shell Script received an error:"
             print e.cmd

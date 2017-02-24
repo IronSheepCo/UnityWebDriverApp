@@ -64,6 +64,7 @@ Factory.register('LoadDialog', cls=LoadDialog)
 Factory.register('SaveDialog', cls=SaveDialog)
 
 if __name__ == '__main__':
+    Command.appDir = os.path.dirname(os.path.realpath(__file__))
     BroadCastReceiver() #start UDP client - move it on the Connect Button ?
     try:
         #catch unhandled exception
