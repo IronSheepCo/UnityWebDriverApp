@@ -14,18 +14,18 @@ TestCaseEntry:
         id:up_button
         text:'Up'
         size_hint:0.075, 1
-        on_press:root.move_up()
+        on_release:root.move_up()
         
     Button:
         id:down_button
         text:'Dn'
         size_hint:0.075, 1
-        on_press:root.move_down()
+        on_release:root.move_down()
     Button:
         id:command_button
         size_hint:0.2, 1
         text:"Command"
-        on_press:root.show_commands(self)
+        on_release:root.show_commands(self)
     TextInput:
         id:target_input
         size_hint:0.35, 1
@@ -38,4 +38,4 @@ TestCaseEntry:
         id:remove_button
         size_hint:0.1, 1
         text:"Del"
-        on_press:root.remove_step()
+        on_release:root.remove_step()
