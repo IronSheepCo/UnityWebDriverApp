@@ -1,5 +1,5 @@
 from kivy.uix.label import Label
-from kivy.uix.scrollview import ScrollView
+from kivy.uix.stacklayout import StackLayout
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty
 import json
@@ -9,9 +9,12 @@ from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 from tech.ironsheep.webdriver.testcase_entry import TestCaseEntry
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 
-class TestCaseView(ScrollView):
+class TestCaseView(StackLayout):
     test_case_stack = ObjectProperty(None)
+    test_case_name = ObjectProperty(None)
+
     test_case = TestCase()
+    #parent_elements_screen 
 
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
@@ -47,6 +50,9 @@ class TestCaseView(ScrollView):
         for step in reversed(self.test_case.steps):
             self.add_stack_step_view(step)
 
+        self.test_case_name.text = filename[0][filename[0].rindex('\\')+1:]
+
+        
         self._popup.dismiss()
         
     def _test_case_run_step_result(self, status, info):

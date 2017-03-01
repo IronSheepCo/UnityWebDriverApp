@@ -26,7 +26,7 @@ ElementsScreen:
             text:"Disconnect"
             height:height
             size_hint:0.15, None
-            on_press:root.disconnect_from_app(self)
+            on_release:root.disconnect_from_app(self)
 
         Label:
             text:"XPath query"
@@ -38,7 +38,7 @@ ElementsScreen:
             text:"Clear query"
             height:height
             size_hint:0.15, None
-            on_press:root.run_clear_query_callback(self)
+            on_release:root.run_clear_query_callback(self)
                     
         TextInput:
             id:xpath_query
@@ -52,18 +52,8 @@ ElementsScreen:
             text:"Run query"
             height:height
             size_hint:1, None
-            on_press:root.run_query_callback(self)
-        
-        Label:
-            text:"Response results"
-            height:height
-            size_hint:0.4, None
-
-        Label:
-            text:"Current test case"
-            height:height
-            size_hint:0.6, None
-
+            on_release:root.run_query_callback(self)
+       
         ScrollView:
             size_hint:0.4, 0.5
             
@@ -73,9 +63,18 @@ ElementsScreen:
                 root_options: {'text':'Result'}
 
         TestCaseView:
+
+            test_case_name: test_case_name
+
             id:test_case_view
             test_case_stack:test_case_stack
-            size_hint:0.6, 0.5
+            size_hint:0.6, 0.45          
+
+            Label:
+                id:test_case_name
+                text:"Current test case"
+                height:height
+                size_hint:1, None
 
             BoxLayout:
                 size_hint:1, 1
@@ -88,23 +87,23 @@ ElementsScreen:
 
                     Button:
                         text:'Load test'
-                        on_press:test_case_view.load_test_pressed(self)
+                        on_release:test_case_view.load_test_pressed(self)
                         
                     Button:
                         text:'Save test'
-                        on_press:test_case_view.save_test_pressed(self)
+                        on_release:test_case_view.save_test_pressed(self)
 
                     Button:
                         text:'+ Add step'
-                        on_press:test_case_view.add_step(self)
+                        on_release:test_case_view.add_step(self)
                     
                     Button:
                         text:'Run'
-                        on_press:test_case_view.run_test_case(self)
+                        on_release:test_case_view.run_test_case(self)
                 
                     Button:
                         text:'Clear'
-                        on_press:test_case_view.clear()
+                        on_release:test_case_view.clear()
 
                 ScrollView:
                     size_hint:1, 1
@@ -137,19 +136,19 @@ ElementsScreen:
             text:"Click"
             height:height
             size_hint:0.15, None
-            on_press:root.pressed_click(self)
+            on_release:root.pressed_click(self)
 
         Button:
             text:"Attribute"
             height:height
             size_hint:0.15, None
-            on_press:root.pressed_attribute(self)
+            on_release:root.pressed_attribute(self)
 
         Button:
             text:"Send keys"
             height:height
             size_hint:0.15, None
-            on_press:root.pressed_send_keys(self)
+            on_release:root.pressed_send_keys(self)
 
         Label:
             text:"Extra param"
@@ -167,19 +166,19 @@ ElementsScreen:
             text:"Name"
             height:height
             size_hint:0.15, None
-            on_press:root.pressed_get_name(self)
+            on_release:root.pressed_get_name(self)
 
         Button:
             text:"Text"
             height:height
             size_hint:0.15, None
-            on_press:root.pressed_get_text(self)
+            on_release:root.pressed_get_text(self)
 
         Button:
             text:"Highlight"
             height:height
             size_hint:0.15, None
-            on_press:root.pressed_highlight(self)
+            on_release:root.pressed_highlight(self)
 
         Label:
             text:"Response"
