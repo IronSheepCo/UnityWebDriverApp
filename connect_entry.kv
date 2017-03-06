@@ -26,12 +26,16 @@ ConnectEntry:
                 Label: 
                     text:"Device Ip: "
                     height:height
-                    size_hint:0.5, None
-                Label:
+                    size_hint:0.25, None
+                TextInput:
                     id: target_ip
                     text:""
                     height:height
-                    size_hint: 0.5, None
+                    size_hint: 0.75, None       
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
 
             BoxLayout:
                 orientation:"horizontal"
@@ -39,12 +43,16 @@ ConnectEntry:
                 Label:
                     text:"Port: "
                     height:height
-                    size_hint:0.5, None
-                Label:
+                    size_hint:0.25, None
+                TextInput:
                     id: target_port
                     text:""
                     height: height
-                    size_hint: 0.5, None
+                    size_hint: 0.75, None
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
 
             BoxLayout:
                 orientation:"horizontal"
@@ -52,12 +60,16 @@ ConnectEntry:
                 Label:
                     text:"Name: "
                     height:height
-                    size_hint:0.5, None
-                Label:
+                    size_hint:0.25, None
+                TextInput:
                     id: target_name
                     text:""
                     height: height
-                    size_hint: 0.5, None
+                    size_hint: 0.75, None
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
 
             BoxLayout:
                 orientation:"horizontal"
@@ -65,12 +77,16 @@ ConnectEntry:
                 Label:
                     text:"ID: "
                     height:height
-                    size_hint:0.5, None
-                Label:
+                    size_hint:0.25, None
+                TextInput:
                     id: target_device_id
                     text:""
                     height: height
-                    size_hint: 0.5, None
+                    size_hint: 0.75, None
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
         Button:
             id:connect_button
             size_hint:0.15, 0.25
