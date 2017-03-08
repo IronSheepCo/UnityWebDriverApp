@@ -197,6 +197,7 @@ ElementsScreen:
         orientation: "vertical"
         FileChooserIconView:
             id: filechooser
+            filters:['*.tc']
 
         BoxLayout:
             size_hint_y: None
@@ -217,6 +218,7 @@ ElementsScreen:
         orientation: "vertical"
         FileChooserIconView:
             id: filechooser
+            filters:['*.tc']
             on_selection: text_input.text = self.selection and self.selection[0] or ''
 
         TextInput:

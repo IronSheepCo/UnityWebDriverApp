@@ -33,6 +33,9 @@ class TestCaseView(StackLayout):
             self.test_case.steps.remove(node.step)
 
     def save(self, path, filename):
+        if len(filename) >= 3:
+            if filename[len(filename)-3:] != ".tc":
+                filename += ".tc"
         with open( os.path.join(path, filename), "w" ) as stream:
             stream.write( self.test_case.toJson() )
         self._popup.dismiss()
