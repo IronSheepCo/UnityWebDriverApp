@@ -1,5 +1,5 @@
 from kivy.uix.label import Label
-from kivy.uix.scrollview import ScrollView
+from kivy.uix.stacklayout import StackLayout
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty
 import json
@@ -8,14 +8,20 @@ import os
 from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 from tech.ironsheep.webdriver.testcase_entry import TestCaseEntry
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
+from tech.ironsheep.webdriver.confirmPopup import ConfirmPopup
 
-class TestCaseView(ScrollView):
+class TestCaseView(StackLayout):
     test_case_stack = ObjectProperty(None)
+    test_case_name = ObjectProperty(None)
+
     test_case = TestCase()
+    #parent_elements_screen 
 
     def __init__(self, **kwargs):
         super(TestCaseView, self).__init__(**kwargs)
         self.selected_test_entry_index = 0
+        self.testCaseSaved = True
+        self._popup = None
 
     def cancel(self):
         self._popup.dismiss()
@@ -28,12 +34,18 @@ class TestCaseView(ScrollView):
         for node in nodes:
             self.test_case_stack.remove_widget( node )
             self.test_case.steps.remove(node.step)
+        self.testCaseSaved = True
+        self.test_case_name.text = "Current Test Case"
 
     def save(self, path, filename):
+        if len(filename) >= 3:
+            if filename[len(filename)-3:] != ".tc":
+                filename += ".tc"
         with open( os.path.join(path, filename), "w" ) as stream:
             stream.write( self.test_case.toJson() )
         self._popup.dismiss()
-    
+        self.testCaseSaved = True
+
     def load(self, path, filename):
         content = ""
         with open( os.path.join(path, filename[0]), "r" ) as stream:
@@ -46,6 +58,9 @@ class TestCaseView(ScrollView):
 
         for step in reversed(self.test_case.steps):
             self.add_stack_step_view(step)
+
+        self.test_case_name.text = filename[0][filename[0].rindex('\\')+1:]
+        self.testCaseSaved = True
 
         self._popup.dismiss()
         
@@ -88,12 +103,31 @@ class TestCaseView(ScrollView):
         print( "running test case")
         self.test_case.run(self._test_case_run_step_result)
 
-    def load_test_pressed(self, instance):
-        print "loading test case"
+    def load_test_ok_callback(self):
+        if self._popup != None:
+            self._popup.dismiss()
+
         content = LoadDialog(load=self.load, cancel=self.cancel)
         self._popup = Popup(title="Load test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
+
+    def load_test_cancel_callback(self):
+        self._popup.dismiss()
+
+    def load_test_pressed(self, instance):
+        print "loading test case"
+        if self.testCaseSaved is False:
+            confirmContent = ConfirmPopup()
+            confirmContent.text = "You have unsaved data. \nDo you want to continue and load a different test case?"
+            confirmContent.ok_text = "Yes"
+            confirmContent.cancel_text = "No"
+            confirmContent.ok_callback = self.load_test_ok_callback
+            confirmContent.cancel_callback = self.load_test_cancel_callback
+            self._popup = Popup(title="Confirm action", content=confirmContent, size_hint=(0.55,0.35))
+            self._popup.open()
+        else:
+            self.load_test_ok_callback()
 
     def save_test_pressed(self, instance):
         print "saving test case"
@@ -125,6 +159,8 @@ class TestCaseView(ScrollView):
         self.test_case.addStep(step, self.selected_test_entry_index)
         self.add_stack_step_view(step, self.selected_test_entry_index)
 
+        self.testCaseSaved = False
+
     def set_current_step_index(self, step):
         index = self.test_case.steps.index(step)
         self.selected_test_entry_index = index
@@ -137,6 +173,7 @@ class TestCaseView(ScrollView):
         else:
             self.switch_testcase_entries(index, 0)
             pass
+        self.testCaseSaved = False
 
     def moveDown_testcase_entry(self, step):
         index = self.test_case.steps.index(step)
@@ -146,6 +183,7 @@ class TestCaseView(ScrollView):
         else:
             self.switch_testcase_entries(index, len(self.test_case.steps)-1)
             pass
+        self.testCaseSaved = False
 
     def switch_testcase_entries(self, index_1, index_2):
         val1 = self.test_case.steps[index_1]

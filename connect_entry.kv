@@ -3,7 +3,7 @@
 #:set height 30
 
 ConnectEntry:
-    height:height
+    height:4*height
     size_hint:1, None
 
     target_ip:target_ip
@@ -14,46 +14,81 @@ ConnectEntry:
 
     BoxLayout:
         orientation:"horizontal"
-        size_hint:1,1
+        size_hint:1,None
 
-        Label: 
-            text:"Device Ip: "
-            height:height
-            size_hint:0.05, None
-        Label:
-            id: target_ip
-            text:""
-            height:height
-            size_hint: 0.1, None
-        Label:
-            text:"Port: "
-            height:height
-            size_hint:0.05, None
-        Label:
-            id: target_port
-            text:""
-            height: height
-            size_hint: 0.05, None
-        Label:
-            text:"Name: "
-            height:height
-            size_hint:0.05, None
-        Label:
-            id: target_name
-            text:""
-            height: height
-            size_hint: 0.15, None
-        Label:
-            text:"ID: "
-            height:height
-            size_hint:0.05, None
-        Label:
-            id: target_device_id
-            text:""
-            height: height
-            size_hint: 0.35, None
+        BoxLayout:
+            orientation:"vertical"
+            size_hint:0.85, None
+
+            BoxLayout:
+                orientation:"horizontal"
+
+                Label: 
+                    text:"Device Ip: "
+                    height:height
+                    size_hint:0.25, None
+                TextInput:
+                    id: target_ip
+                    text:""
+                    height:height
+                    size_hint: 0.75, None       
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
+
+            BoxLayout:
+                orientation:"horizontal"
+
+                Label:
+                    text:"Port: "
+                    height:height
+                    size_hint:0.25, None
+                TextInput:
+                    id: target_port
+                    text:""
+                    height: height
+                    size_hint: 0.75, None
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
+
+            BoxLayout:
+                orientation:"horizontal"
+                
+                Label:
+                    text:"Name: "
+                    height:height
+                    size_hint:0.25, None
+                TextInput:
+                    id: target_name
+                    text:""
+                    height: height
+                    size_hint: 0.75, None
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
+
+            BoxLayout:
+                orientation:"horizontal"
+
+                Label:
+                    text:"ID: "
+                    height:height
+                    size_hint:0.25, None
+                TextInput:
+                    id: target_device_id
+                    text:""
+                    height: height
+                    size_hint: 0.75, None
+                    multiline:False
+                    readonly:True
+                    background_color: [0,0,0,1]
+                    foreground_color: [1,1,1,1]
         Button:
             id:connect_button
-            size_hint:0.15, 1
+            size_hint:0.15, 0.25
             text:"Connect"
-            on_press:root.connect_to_server_callback(self)
+            on_release:root.connect_to_server_callback(self)
