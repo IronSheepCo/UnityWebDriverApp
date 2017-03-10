@@ -1,5 +1,6 @@
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.widget import Widget
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty
 import json

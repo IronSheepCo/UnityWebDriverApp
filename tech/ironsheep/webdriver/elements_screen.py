@@ -94,3 +94,7 @@ class ElementsScreen( Screen ):
     def on_enter(self):
         self.label.text = "connected to "+Config.server_ip
         self.query_response.bind(minimum_height=self.query_response.setter('height') )
+
+    def show_test_list(self):       
+
+        self.manager.current = 'test_list'

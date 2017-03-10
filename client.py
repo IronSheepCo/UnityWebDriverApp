@@ -35,8 +35,10 @@ from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 from tech.ironsheep.webdriver.communication import BroadCastReceiver
 #from tech.ironsheep.webdriver.testcase_entry import TestCaseEntry
 from tech.ironsheep.webdriver.testcase_view import TestCaseView
+from tech.ironsheep.webdriver.testlist_view import TestListView
 from tech.ironsheep.webdriver.elements_screen import ElementsScreen
 from tech.ironsheep.webdriver.connect_screen import ConnectScreen
+from tech.ironsheep.webdriver.testlist_screen import TestListScreen
 from tech.ironsheep.webdriver.connect_entry import ConnectEntry
 from tech.ironsheep.webdriver.treeview_text_input import TreeViewTextInput
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
@@ -51,6 +53,7 @@ class WebDriverApp(App):
 
         self.sm.add_widget(Builder.load_file("connect_screen.kv"))
         self.sm.add_widget(Builder.load_file("elements_screen.kv"))
+        self.sm.add_widget(Builder.load_file("testlist_screen.kv"))
 
         return self.sm
 
@@ -64,7 +67,7 @@ Factory.register('LoadDialog', cls=LoadDialog)
 Factory.register('SaveDialog', cls=SaveDialog)
 
 if __name__ == '__main__':
-    Command.appDir = os.path.dirname(os.path.realpath(__file__))
+    Command.appDir = os.path.dirname(os.path.realpath(__file__))    
     BroadCastReceiver() #start UDP client - move it on the Connect Button ?
     try:
         #catch unhandled exception

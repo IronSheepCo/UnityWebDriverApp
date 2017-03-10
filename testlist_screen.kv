@@ -1,0 +1,77 @@
+#:kivy 1.0
+
+#:set height 30
+
+TestListScreen:
+    name:"test_list"
+
+    title_label: title_label
+    back_button: back_button
+    test_case_list_view: test_case_list_view
+    test_case_list_stack: test_case_list_stack
+
+    StackLayout:
+        
+        Button:
+            id: back_button
+            text:"Back"
+            height:height
+            size_hint:0.15, None
+            on_release:root.Back()
+
+        Label:
+            id:title_label
+            height:height
+            size_hint:0.7, None
+        
+
+        TestListView:
+
+            test_case_list_name: test_case_list_name
+            test_case_list_stack: test_case_list_stack
+
+            id:test_case_list_view
+            size_hint:1, 0.9
+
+            Label:
+                id:test_case_list_name
+                text:"Current test case list"
+                height:height
+                size_hint:1, None
+        
+            BoxLayout:
+                size_hint:1, 1
+                orientation:'vertical'
+
+                BoxLayout:
+                    orientation:'horizontal'
+                    height:height
+                    size_hint:0.75, None
+
+                    Button:
+                        text:'Load test list'
+                        on_release:test_case_list_view.load_test_list_pressed(self)
+                        
+                    Button:
+                        text:'Save test list'
+                        on_release:test_case_list_view.save_test_list_pressed(self)
+
+                    Button:
+                        text:'+ Add test case'
+                        on_release:test_case_list_view.add_test_case_step(self)
+                    
+                    Button:
+                        text:'Run'
+                        on_release:test_case_list_view.run_test_case(self)
+                
+                    Button:
+                        text:'Clear'
+                        on_release:test_case_list_view.clear()
+
+                ScrollView:
+                    size_hint:1, 1
+                    StackLayout:
+                        hide_root: True
+                        size_hint: 0.95, None
+                        id:test_case_list_stack
+                        height:self.minimum_height

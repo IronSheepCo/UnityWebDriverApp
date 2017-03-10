@@ -1,0 +1,36 @@
+#:kivy 1.0
+
+#:set height 30
+
+TestListEntry:
+    height: height
+    size_hint: 1, None
+    target_input:target_input
+    remove_button:remove_button
+    load_test_button:load_test_button
+        
+    Button:
+        id:up_button
+        text:'Up'
+        size_hint:0.075, 1
+        on_release:root.move_up()        
+    Button:
+        id:down_button
+        text:'Dn'
+        size_hint:0.075, 1
+        on_release:root.move_down()
+
+    TextInput:
+        id:target_input
+        size_hint:0.5, 1
+        text:"target"
+    Button:
+        id:load_test_button
+        text:'Load Test'
+        size_hint:0.2, 1
+        on_release:root.load_test()
+    Button:
+        id:remove_button
+        size_hint:0.1, 1
+        text:"Del"
+        on_release:root.remove_step()
