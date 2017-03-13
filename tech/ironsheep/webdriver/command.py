@@ -97,7 +97,7 @@ class Command:
             else: t = float(arg)
             return Command.run_shell_script(xpath_query, t)
 
-        response = Command.run_query(xpath_query).json()
+        response = Command.run_query( xpath_query ).json(strict=False)
 
         if "data" in response:
             if len(response["data"]) == 0:
@@ -149,8 +149,8 @@ class Command:
         endpoint = 'element/'+uuid+'/click'
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
-        print( response.json() )
-        return response.json()
+        print( response.json(strict=False) )
+        return response.json(strict=False)
    
     @staticmethod
     def _check_for_data( json_data ):
@@ -164,7 +164,7 @@ class Command:
         endpoint = 'element/'+uuid+'/attribute/'+name
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
-        json_response = response.json()
+        json_response = response.json(strict=False)
         print( json_response )
         return Command._check_for_data( json_response )
 
@@ -174,16 +174,16 @@ class Command:
         print(endpoint)
         payload = {'text':keys}
         response = requests.post( Config.endpoint_session(endpoint), json=payload )
-        print( response.json() )
-        return response.json()
+        print( response.json(strict=False) )
+        return response.json(strict=False)
     
     @staticmethod
     def name(uuid):
         endpoint = 'element/'+uuid+'/name'
         print(endpoint)
         response = requests.get( Config.endpoint_session(endpoint) )
-        print( response.json() )
-        return Command._check_for_data( response.json() )
+        print( response.json(strict=False) )
+        return Command._check_for_data( response.json(strict=False) )
 
     @staticmethod
     def timeouts( implicit=-1, page_load=-1, script=-1):
@@ -199,7 +199,7 @@ class Command:
         
         response = requests.post( Config.endpoint_session(endpoint), json=payload)
 
-        if 'error' in response.json():
+        if 'error' in response.json(strict=False):
             return False
         else:
             return True
@@ -207,7 +207,7 @@ class Command:
     @staticmethod
     def wait_for_element(xpath, timeout = 30):
         Command.timeouts( implicit=timeout*1000 )
-        response = Command.run_query( xpath ).json()
+        response = Command.run_query( xpath ).json(strict=False)
         if "data" in response:
             el = response["data"][0]
             uuid = el[webelement_key_id]
@@ -239,7 +239,7 @@ class Command:
     def is_visible(uuid):
         endpoint = 'element/'+uuid+'/visible'
         response = requests.get( Config.endpoint_session(endpoint) )
-        return Command._check_for_data( response.json() )
+        return Command._check_for_data( response.json(strict=False) )
 
     @staticmethod
     def assert_text(uuid, text_to_check):
@@ -255,7 +255,7 @@ class Command:
     def wait_for_visible(xpath, timeout = 30):
         now = time.time()
         while time.time() - now < timeout:
-            response = Command.run_query( xpath ).json()
+            response = Command.run_query( xpath ).json(strict=False)
 
             if "data" in response:
                 if len(response["data"]) == 0:
@@ -279,8 +279,8 @@ class Command:
     def highlight(uuid):
         endpoint = 'element/'+uuid+'/highlight'
         response = requests.get( Config.endpoint_session(endpoint) )
-        print( response.json() )
-        return response.json()
+        print( response.json(strict=False) )
+        return response.json(strict=False)
 
     @staticmethod
     def run_shell_script(script="ls", timeouts=30):
@@ -317,5 +317,3 @@ class Command:
             shell_cmd_status = False
 
         shell_cmd_mutex.release()
-
-    
