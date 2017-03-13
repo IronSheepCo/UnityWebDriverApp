@@ -32,15 +32,15 @@ class TestCase:
     def addStep(self, step, index):
         self.steps.insert(index, step)
 
-    def flatten(self):
+    def flatten(self, filename):
         ret = {}
-        ret["name"] = "Test case name"
+        ret["name"] = filename
         ret["steps"] = [ step.flatten() for step in reversed(self.steps) if step.command != "" ]
         
         return ret
 
-    def toJson(self):
-        return json.dumps( self.flatten() )
+    def toJson(self, filename):
+        return json.dumps( self.flatten(filename) )
 
     def _run_blocking(self):
 
