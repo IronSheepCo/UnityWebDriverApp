@@ -10,6 +10,7 @@ from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 from tech.ironsheep.webdriver.testcase_entry import TestCaseEntry
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 from tech.ironsheep.webdriver.confirmPopup import ConfirmPopup
+from tech.ironsheep.webdriver.utils import Utils
 
 class TestCaseView(StackLayout):
     test_case_stack = ObjectProperty(None)
@@ -39,11 +40,15 @@ class TestCaseView(StackLayout):
         self.test_case_name.text = "Current Test Case"
 
     def save(self, path, filename):
-        if len(filename) >= 3:
-            if filename[len(filename)-3:] != ".tc":
-                filename += ".tc"
-        with open( os.path.join(path, filename), "w" ) as stream:
-            stream.write( self.test_case.toJson() )
+        newFilename = Utils.get_valid_filename(filename)
+        listname = newFilename
+        if len(newFilename) >= 3:
+            if newFilename[len(newFilename)-3:] != ".tc":
+                newFilename += ".tc"
+        else:
+            newFilename += ".tc"
+        with open( os.path.join(path, newFilename), "w" ) as stream:
+            stream.write( self.test_case.toJson(listname) )
         self._popup.dismiss()
         self.testCaseSaved = True
 
