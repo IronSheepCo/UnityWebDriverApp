@@ -70,14 +70,14 @@ class TestListEntry(StackLayout):
 
     def remove_step(self):
         self.parent.remove_widget(self)
-        self.parent_testlist_view.test_case.steps.remove(self.step)
+        self.parent_testlist_view.test_case_list.steps.remove(self.step)
         self.parent_testlist_view.test_case_list_stack.remove_widget(self)
 
     def move_up(self):
-        self.parent_testlist_view.moveUp_testcase_entry(self.step)
+        self.parent_testlist_view.moveUp_test_entry(self.step)
 
     def move_down(self):
-        self.parent_testlist_view.moveDown_testcase_entry(self.step)
+        self.parent_testlist_view.moveDown_test_entry(self.step)
 
     def load_test(self):
         print "loading test case into new List Step"
