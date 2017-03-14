@@ -68,7 +68,7 @@ ElementsScreen:
 
             id:test_case_view
             test_case_stack:test_case_stack
-            size_hint:0.6, 0
+            size_hint:0.6, 0.45
 
             Label:
                 id:test_case_name
@@ -204,8 +204,7 @@ ElementsScreen:
         orientation: "vertical"
         FileChooserIconView:
             id: filechooser
-            filters:['*.tc']
-
+            
         BoxLayout:
             size_hint_y: None
             height: 30
@@ -225,8 +224,7 @@ ElementsScreen:
         pos: root.pos
         orientation: "vertical"
         FileChooserIconView:
-            id: filechooser
-            filters:['*.tc']
+            id: filechooser            
             on_selection: text_input.text = self.selection and self.selection[0] or ''
 
         TextInput:
