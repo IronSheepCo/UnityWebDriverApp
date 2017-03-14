@@ -15,7 +15,7 @@ class TestListStep:
     @staticmethod
     def loadFromFlattent(flatten):
         ret = TestListStep()
-        ret.target = flatten["target"]
+        ret.target = flatten
 
         return ret
 
@@ -94,7 +94,7 @@ class TestList:
         dec = json.loads( json_string )
         ret = TestList()
         
-        for step in dec["steps"]:
+        for step in dec["test_cases"]:
             st = TestListStep.loadFromFlattent( step )
             ret.addStep( st, 0 )
 
