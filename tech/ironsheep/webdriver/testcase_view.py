@@ -113,7 +113,7 @@ class TestCaseView(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        content = LoadDialog(load=self.load, cancel=self.cancel)
+        content = LoadDialog(load=self.load, cancel=self.cancel, fileFilter=['*.tc'])
         self._popup = Popup(title="Load test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
@@ -137,7 +137,7 @@ class TestCaseView(StackLayout):
 
     def save_test_pressed(self, instance):
         print "saving test case"
-        content = SaveDialog(save=self.save, cancel=self.cancel)
+        content = SaveDialog(save=self.save, cancel=self.cancel, fileFilter = ['*.tc'])
         self._popup = Popup(title="Save test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
