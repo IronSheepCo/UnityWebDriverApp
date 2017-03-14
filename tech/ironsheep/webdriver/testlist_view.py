@@ -21,20 +21,47 @@ class TestListView(StackLayout):
         self.selected_test_list_entry_index = 0
         self.testListSaved = True
         self._popup = None
-    
+
     def run_test_case(self):
         pass
 
-    def load_test_list_pressed(self):
-        pass
-
     def cancel(self):
+        '''
+        dismiss the active popup.
+        '''
+        self._popup.dismiss()
+
+    def load_test_list_pressed(self, instance):
+        if self._popup != None:
+            self._popup.dismiss()
+
+        content = LoadDialog(load=self.load, cancel=self.cancel, fileFilter=['*.ts'])
+        self._popup = Popup(title="Load test suite", content=content,
+                            size_hint=(0.8, 0.8))
+        self._popup.open()
+    
+    def load(self, path, filename):
+        content = ""
+        with open( os.path.join(path, filename[0]), "r" ) as stream:
+            content = stream.read()
+
+        #clearing existing test case
+        self.clear()
+
+        self.test_case_list = TestList.loadFromJson(content)
+
+        for step in reversed(self.test_case_list.steps):
+            self.add_stack_step_view(step)
+
+        self.test_case_list_name.text = filename[0][filename[0].rindex('\\')+1:]
+        self.testListSaved = True
+
         self._popup.dismiss()
 
     def save_test_list_pressed(self, instance):
-        print "saving test list"
-        content = SaveDialog(save=self.save, cancel=self.cancel)
-        self._popup = Popup(title="Save test list", content=content,
+        print "saving test suite"
+        content = SaveDialog(save=self.save, cancel=self.cancel, fileFilter = ['*.ts'])
+        self._popup = Popup(title="Save test suite", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
     
@@ -90,6 +117,22 @@ class TestListView(StackLayout):
             self.test_case_list.steps.remove(node.step)
         self.testListSaved = True
         self.test_case_list_name.text = "Current Test Case List"
+
+    def add_stack_step_view(self, step, index=None):
+        tce = TestListEntry.load()
+        tce.step = step
+        tce.parent_testlist_view = self
+        if index is None:
+            index = 0
+        elif index < 0:
+            index = 0
+        elif index >= len(self.test_case_list_stack.children):
+            index = len(self.test_case_list_stack.children)-1
+
+        self.test_case_list_stack.add_widget(tce, index)
+
+        tce.load_from_step()
+        tce.target_input.focus = True#.move_cursor()
 
     def moveUp_test_entry(self, step):
         index = self.test_case_list.steps.index(step)
