@@ -1,6 +1,7 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
+from kivy.uix.screenmanager import Screen, SlideTransition
 import json
 import os
 
@@ -9,21 +10,28 @@ from tech.ironsheep.webdriver.testlist import TestList, TestListStep
 from tech.ironsheep.webdriver.utils import Utils
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 from tech.ironsheep.webdriver.confirmPopup import ConfirmPopup
+from tech.ironsheep.webdriver.command import Config
 
 class TestListView(StackLayout):
     test_case_list_name = ObjectProperty(None)
     test_case_list_stack = ObjectProperty(None)
+
+    my_screen = Screen()
 
     test_case_list = TestList()
 
     def __init__(self, **kwargs):
         super(TestListView, self).__init__(**kwargs)
         self.selected_test_list_entry_index = 0
-        self.testListSaved = True
+        self.testSuiteSaved = True
         self._popup = None
 
     def run_test_case(self):
         pass
+
+    def show_test_case(self):
+        self.my_screen.manager.transition = SlideTransition(direction='right')
+        self.my_screen.manager.current = 'elements'
 
     def cancel(self):
         '''
@@ -54,7 +62,7 @@ class TestListView(StackLayout):
             self.add_stack_step_view(step)
 
         self.test_case_list_name.text = filename[0][filename[0].rindex('\\')+1:]
-        self.testListSaved = True
+        self.testSuiteSaved = True
 
         self._popup.dismiss()
 
@@ -76,18 +84,19 @@ class TestListView(StackLayout):
         with open( os.path.join(path, newFilename), "w" ) as stream:
             stream.write( self.test_case_list.toJson(listName) )
         self._popup.dismiss()
-        self.testCaseSaved = True
+        self.testSuiteSaved = True
 
-    def add_test_case_step(self, instance):
-        print "adding test case step"
+    def add_test_suite_step(self):
+        print "adding test suite step"
         step = TestListStep()
 
         self.test_case_list.addStep(step, self.selected_test_list_entry_index)
-        self.add_test_case_view(step, self.selected_test_list_entry_index)
+        self.add_test_suite_view(step, self.selected_test_list_entry_index)
 
-        self.testListSaved = False
+        self.testSuiteSaved = False
+        return step
 
-    def add_test_case_view(self, step, index=None):
+    def add_test_suite_view(self, step, index=None):
         tce = TestListEntry.load()
         tce.step = step
         tce.parent_testlist_view = self
@@ -115,7 +124,7 @@ class TestListView(StackLayout):
         for node in nodes:
             self.test_case_list_stack.remove_widget( node )
             self.test_case_list.steps.remove(node.step)
-        self.testListSaved = True
+        self.testSuiteSaved = True
         self.test_case_list_name.text = "Current Test Case List"
 
     def add_stack_step_view(self, step, index=None):
@@ -140,7 +149,7 @@ class TestListView(StackLayout):
             self.switch_test_entries(index, index+1)
         else:
             self.switch_test_entries(index, 0)
-        self.testListSaved = False
+        self.testSuiteSaved = False
 
     def moveDown_test_entry(self, step):
         index = self.test_case_list.steps.index(step)
@@ -148,7 +157,7 @@ class TestListView(StackLayout):
             self.switch_test_entries(index, index-1)
         else:
             self.switch_test_entries(index, len(self.test_case_list.steps)-1)
-        self.testListSaved = False
+        self.testSuiteSaved = False
 
     def switch_test_entries(self, index_1, index_2):
         val1 = self.test_case_list.steps[index_1]
