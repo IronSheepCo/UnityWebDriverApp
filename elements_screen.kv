@@ -74,11 +74,17 @@ ElementsScreen:
                 id:test_case_name
                 text:"Current test case"
                 height:height
-                size_hint:0.75, None
+                size_hint:0.5, None
+
+            Button:
+                text: 'Add to Suite'
+                on_release:root.add_to_suite()
+                height:height
+                size_hint:0.25, None
 
             Button:
                 text:'Show Test List'
-                on_release:root.show_test_list()
+                on_release:root.show_test_suite()
                 height:height
                 size_hint:0.25, None
 
