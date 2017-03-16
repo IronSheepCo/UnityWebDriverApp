@@ -1,16 +1,19 @@
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.treeview import TreeViewLabel, TreeViewNode
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen, SlideTransition
 
 import types
 import os
 
 from tech.ironsheep.webdriver.command import Command
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
+from tech.ironsheep.webdriver.utils import Utils
 
 class TestListEntry(StackLayout):
     target_input = ObjectProperty(None)
@@ -84,7 +87,7 @@ class TestListEntry(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        content = LoadDialog(load=self.get_path, cancel=self.cancel)
+        content = LoadDialog(load=self.load_path, cancel=self.cancel, fileFilter=['*.tc'])
         self._popup = Popup(title="Load test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
@@ -92,14 +95,34 @@ class TestListEntry(StackLayout):
     def cancel(self):
         self._popup.dismiss()
 
-    def get_path(self, path, filename):
-        rel_path = os.path.relpath(path, Command.appDir)
-        if rel_path == ".":
-            the_path = filename[0][len(path)+1:]
-        else:
-            the_path = os.path.relpath(path, Command.appDir) + filename[0][len(path):]
-        #print the_path
-        self.target_input.text = the_path
-        self.testCaseSaved = False
+    def load_path(self, path, filename):
+        self.target_input.text = Utils.get_relative_path(path, filename)
+        self.parent_testlist_view.testSuiteSaved = False
 
         self._popup.dismiss()
+
+    def edit_test(self):
+        if self.parent_testlist_view.my_screen.manager.has_screen('elements'):
+            elements_screen = Screen()
+            elements_screen = self.parent_testlist_view.my_screen.manager.get_screen('elements')
+
+            #check existing file
+            if os.path.exists(self.target_input.text):                
+                path = os.path.dirname(os.path.abspath(self.target_input.text))
+                filename = [2]
+                filename[0] = os.path.abspath(self.target_input.text)
+
+                elements_screen.test_case_view.load(path, filename)
+                self.parent_testlist_view.show_test_case()
+            else:
+                # show popup with Warning: file not found
+                alert_text = "File not found at path:\n[b]%d[/b]"%(self.target_input.text)
+                alert = Popup(title="Warning",
+                              content=Label(text=alert_text,
+                                            halign="center",
+                                            markup=True),
+                              size_hint=(0.6, 0.5))
+                alert.open()
+
+
+
