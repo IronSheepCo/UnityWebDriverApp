@@ -58,11 +58,11 @@ TestListScreen:
 
                     Button:
                         text:'+ Add test case'
-                        on_release:test_case_list_view.add_test_case_step(self)
+                        on_release:test_case_list_view.add_test_suite_step()
                     
                     Button:
                         text:'Run'
-                        on_release:test_case_list_view.run_test_case(self)
+                        on_release:test_case_list_view.run_test_suite(self)
                 
                     Button:
                         text:'Clear'
