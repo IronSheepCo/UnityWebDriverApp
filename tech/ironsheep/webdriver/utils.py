@@ -1,6 +1,9 @@
 import re
 from decimal import Decimal
 import datetime
+import os
+
+from tech.ironsheep.webdriver.command import Command
 
 _PROTECTED_TYPES = (type(None), int, float, Decimal, datetime.datetime, datetime.date, datetime.time)
 class Utils():
@@ -37,3 +40,13 @@ class Utils():
         """
         s = Utils.force_text(s).strip().replace(' ', '_')
         return re.sub(r'(?u)[^-\w.]', '', s)
+
+    @staticmethod
+    def get_relative_path(path, filename):
+        rel_path = os.path.relpath(path, Command.appDir)
+        if rel_path == ".":
+            the_path = filename[0][len(path)+1:]
+        else:
+            the_path = os.path.relpath(path, Command.appDir) + filename[0][len(path):]
+
+        return the_path
