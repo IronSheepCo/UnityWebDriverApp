@@ -13,6 +13,7 @@ class TestListScreen(Screen):
     def on_enter(self):
         self.title_label.text = "connected to "+Config.server_ip
         self.test_case_list_stack.bind(minimum_height=self.test_case_list_stack.setter('height') )
+        self.test_case_list_view.my_screen = self
 
     def Back(self):
-        self.manager.current = 'elements'
+        self.test_case_list_view.show_test_case()
