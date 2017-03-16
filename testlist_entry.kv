@@ -12,12 +12,12 @@ TestListEntry:
     Button:
         id:up_button
         text:'Up'
-        size_hint:0.075, 1
+        size_hint:0.07, 1
         on_release:root.move_up()        
     Button:
         id:down_button
         text:'Dn'
-        size_hint:0.075, 1
+        size_hint:0.07, 1
         on_release:root.move_down()
 
     TextInput:
@@ -27,8 +27,13 @@ TestListEntry:
     Button:
         id:load_test_button
         text:'Load Test'
-        size_hint:0.2, 1
+        size_hint:0.12, 1
         on_release:root.load_test()
+    Button:
+        id:edit_test_button
+        text:'Edit Test'
+        size_hint:0.12, 1
+        on_release:root.edit_test()
     Button:
         id:remove_button
         size_hint:0.1, 1
