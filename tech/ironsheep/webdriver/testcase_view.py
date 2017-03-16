@@ -15,6 +15,7 @@ from tech.ironsheep.webdriver.utils import Utils
 class TestCaseView(StackLayout):
     test_case_stack = ObjectProperty(None)
     test_case_name = ObjectProperty(None)
+    test_case_path = None    
 
     test_case = TestCase()
     #parent_elements_screen 
@@ -40,17 +41,24 @@ class TestCaseView(StackLayout):
         self.test_case_name.text = "Current Test Case"
 
     def save(self, path, filename):
-        newFilename = Utils.get_valid_filename(filename)
+        '''
+        save the data to the new file at path and filename
+        '''
+        newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
         listname = newFilename
         if len(newFilename) >= 3:
             if newFilename[len(newFilename)-3:] != ".tc":
                 newFilename += ".tc"
         else:
             newFilename += ".tc"
-        with open( os.path.join(path, newFilename), "w" ) as stream:
-            stream.write( self.test_case.toJson(listname) )
-        self._popup.dismiss()
+        with open(os.path.join(path, newFilename), "w") as stream:
+            stream.write(self.test_case.toJson(listname))
+
+        self.test_case_path = Utils.get_relative_path(path, newFilename)+newFilename
+        self.test_case_name.text = newFilename
         self.testCaseSaved = True
+        if not self._popup is None:
+            self._popup.dismiss()
 
     def load(self, path, filename):
         content = ""
@@ -65,10 +73,12 @@ class TestCaseView(StackLayout):
         for step in reversed(self.test_case.steps):
             self.add_stack_step_view(step)
 
+        self.test_case_path = Utils.get_relative_path(path, filename)
         self.test_case_name.text = filename[0][filename[0].rindex('\\')+1:]
         self.testCaseSaved = True
 
-        self._popup.dismiss()
+        if not self._popup is None:
+            self._popup.dismiss()
         
     def _test_case_run_step_result(self, status, info):
         if status is False:
