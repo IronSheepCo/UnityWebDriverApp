@@ -50,9 +50,9 @@ class TestListView(StackLayout):
     
     def load(self, path, filename):
         content = ""
-        if not filename:            
+        if not filename:
             return
-            
+
         with open( os.path.join(path, filename[0]), "r" ) as stream:
             content = stream.read()
 
@@ -75,12 +75,16 @@ class TestListView(StackLayout):
         self._popup = Popup(title="Save test suite", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
-    
+
     def save(self, path, filename):
-        try:
+        try: #remove all illegal characters.
             newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
-        except:
+        except: #rindex will throw an exception if the string searched was not found.
             newFilename = Utils.get_valid_filename(filename)
+
+        #if the user tries to save the file with no name, or the name of just the extension, we return. (no saving)
+        if len(newFilename) == 0 or newFilename==".ts": 
+            return
 
         listName = newFilename
         if len(newFilename) >= 3:

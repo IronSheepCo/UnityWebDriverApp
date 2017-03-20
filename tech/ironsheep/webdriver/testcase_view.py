@@ -44,10 +44,14 @@ class TestCaseView(StackLayout):
         '''
         save the data to the new file at path and filename
         '''
-        try:
+        try: #remove all illegal characters.
             newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
-        except:
+        except: #rindex will throw an exception if the string searched was not found.
             newFilename = Utils.get_valid_filename(filename)
+
+        #if the user tries to save the file with no name, or the name of just the extension, we return. (no saving)
+        if len(newFilename) == 0 or newFilename==".tc":
+            return
 
         listname = newFilename
         if len(newFilename) >= 3:
