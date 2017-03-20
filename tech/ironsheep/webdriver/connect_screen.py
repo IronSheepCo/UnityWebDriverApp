@@ -25,7 +25,7 @@ SERVER_SEARCH_TIME_DELAY = 1
 class ConnectScreen( Screen ):
     ip = "None"
     port = ""
-    connect_list = ObjectProperty(None)
+    connect_suite = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(ConnectScreen, self).__init__(**kwargs)    
@@ -39,7 +39,7 @@ class ConnectScreen( Screen ):
         print "Add Connection Element"
         ce = ConnectEntry.load()
         ce.screen = self
-        self.connect_list.add_widget( ce )
+        self.connect_suite.add_widget( ce )
         ce.target_ip.text = ce.target_ip.text + ip
         ce.target_port.text = ce.target_port.text + port
         ce.target_name.text = ce.target_name.text + name
@@ -50,14 +50,14 @@ class ConnectScreen( Screen ):
 
     # Every second this method is called so we can check if we have 
     def timed_check(self, instance):
-        for key in BroadCastReceiver.Server_list:
+        for key in BroadCastReceiver.Server_suite:
             if key not in self.servers:
-                self.add_connection_element(str(key), str(BroadCastReceiver.Server_list[key][0]), str(BroadCastReceiver.Server_list[key][2]), str(BroadCastReceiver.Server_list[key][3]))
+                self.add_connection_element(str(key), str(BroadCastReceiver.Server_suite[key][0]), str(BroadCastReceiver.Server_suite[key][2]), str(BroadCastReceiver.Server_suite[key][3]))
 
         keys_to_remove = []
-        # remove all elements that are not in the Broadcast list anymore        
+        # remove all elements that are not in the Broadcast suite anymore        
         for key in self.servers:
-            if key not in BroadCastReceiver.Server_list:
+            if key not in BroadCastReceiver.Server_suite:
                 keys_to_remove.append(key)
 
         for key in keys_to_remove:            

@@ -53,14 +53,14 @@ class TestCaseView(StackLayout):
         if len(newFilename) == 0 or newFilename==".tc":
             return
 
-        listname = newFilename
+        suitename = newFilename
         if len(newFilename) >= 3:
             if newFilename[len(newFilename)-3:] != ".tc":
                 newFilename += ".tc"
         else:
             newFilename += ".tc"
         with open(os.path.join(path, newFilename), "w") as stream:
-            stream.write(self.test_case.toJson(listname))
+            stream.write(self.test_case.toJson(suitename))
 
         self.test_case_path = Utils.get_relative_path(path, newFilename)+newFilename
         self.test_case_name.text = newFilename

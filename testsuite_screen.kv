@@ -2,13 +2,13 @@
 
 #:set height 30
 
-TestListScreen:
-    name:"test_list"
+TestSuiteScreen:
+    name:"test_suite"
 
     title_label: title_label
     back_button: back_button
-    test_case_list_view: test_case_list_view
-    test_case_list_stack: test_case_list_stack
+    test_case_suite_view: test_case_suite_view
+    test_case_suite_stack: test_case_suite_stack
 
     StackLayout:
         
@@ -25,17 +25,17 @@ TestListScreen:
             size_hint:0.7, None
         
 
-        TestListView:
+        TestSuiteView:
 
-            test_case_list_name: test_case_list_name
-            test_case_list_stack: test_case_list_stack
+            test_case_suite_name: test_case_suite_name
+            test_case_suite_stack: test_case_suite_stack
 
-            id:test_case_list_view
+            id:test_case_suite_view
             size_hint:1, 0.9
 
             Label:
-                id:test_case_list_name
-                text:"Current Test Case List"
+                id:test_case_suite_name
+                text:"Current Test Case Suite"
                 height:height
                 size_hint:1, None
         
@@ -49,29 +49,29 @@ TestListScreen:
                     size_hint:0.75, None
 
                     Button:
-                        text:'Load test list'
-                        on_release:test_case_list_view.load_test_list_pressed(self)
+                        text:'Load test suite'
+                        on_release:test_case_suite_view.load_test_suite_pressed(self)
                         
                     Button:
-                        text:'Save test list'
-                        on_release:test_case_list_view.save_test_list_pressed(self)
+                        text:'Save test suite'
+                        on_release:test_case_suite_view.save_test_suite_pressed(self)
 
                     Button:
                         text:'+ Add test case'
-                        on_release:test_case_list_view.add_test_suite_step()
+                        on_release:test_case_suite_view.add_test_suite_step()
                     
                     Button:
                         text:'Run'
-                        on_release:test_case_list_view.run_test_suite(self)
+                        on_release:test_case_suite_view.run_test_suite(self)
                 
                     Button:
                         text:'Clear'
-                        on_release:test_case_list_view.clear()
+                        on_release:test_case_suite_view.clear()
 
                 ScrollView:
                     size_hint:1, 1
                     StackLayout:
                         hide_root: True
                         size_hint: 0.95, None
-                        id:test_case_list_stack
+                        id:test_case_suite_stack
                         height:self.minimum_height

@@ -4,7 +4,7 @@
 
 ConnectScreen:
     name:"connect"
-    connect_list:connect_list
+    connect_suite:connect_suite
     
     StackLayout:
         Label:
@@ -23,13 +23,13 @@ ConnectScreen:
             text:"Connect to IP"
             on_release:root.fixed_connect_callback(self)    
         Label:
-            text:"Server List:"
+            text:"Server Suite:"
             height:height
             size_hint: 0.35, None  
         ScrollView:
             size_hint:1, 1
             StackLayout:                
-                id:connect_list
+                id:connect_suite
                 hide_root: True
                 size_hint:1, None
                 

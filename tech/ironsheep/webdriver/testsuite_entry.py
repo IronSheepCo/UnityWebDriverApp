@@ -15,21 +15,21 @@ from tech.ironsheep.webdriver.command import Command
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 from tech.ironsheep.webdriver.utils import Utils
 
-class TestListEntry(StackLayout):
+class TestSuiteEntry(StackLayout):
     target_input = ObjectProperty(None)
     remove_button = ObjectProperty(None)
     load_test_button = ObjectProperty(None)
     step = None
-    parent_testlist_view = None
+    parent_testsuite_view = None
 
     def __init__(self, **kwargs):
-        super(TestListEntry, self).__init__(**kwargs)
+        super(TestSuiteEntry, self).__init__(**kwargs)
         self.color_selected = [ 0.333, 0.251, 0.467 ,1]
         self._popup = None
 
     @staticmethod
     def load():
-        return Builder.load_file('testlist_entry.kv')
+        return Builder.load_file('testsuite_entry.kv')
  
     def move_cursor_real(self, dt):
         self.target_input.do_cursor_movement( 'cursor_home', True )
@@ -57,11 +57,11 @@ class TestListEntry(StackLayout):
 
     def on_focus(self, instance, value):
         if value: #object Focused
-            if self.parent_testlist_view is not None:
-                #print self.parent_testlist_view.selected_test_entry_index
+            if self.parent_testsuite_view is not None:
+                #print self.parent_testsuite_view.selected_test_entry_index
                 self.target_input.background_color = [0.733, 0.251, 0.467, 1]
 
-                self.parent_testlist_view.set_current_step_index(self.step)
+                self.parent_testsuite_view.set_current_step_index(self.step)
             else:
                 self.target_input.background_color = [1, 1, 1, 1]
         else: #object losing focus
@@ -73,17 +73,17 @@ class TestListEntry(StackLayout):
 
     def remove_step(self):
         self.parent.remove_widget(self)
-        self.parent_testlist_view.test_case_list.steps.remove(self.step)
-        self.parent_testlist_view.test_case_list_stack.remove_widget(self)
+        self.parent_testsuite_view.test_case_suite.steps.remove(self.step)
+        self.parent_testsuite_view.test_case_suite_stack.remove_widget(self)
 
     def move_up(self):
-        self.parent_testlist_view.moveUp_test_entry(self.step)
+        self.parent_testsuite_view.moveUp_test_entry(self.step)
 
     def move_down(self):
-        self.parent_testlist_view.moveDown_test_entry(self.step)
+        self.parent_testsuite_view.moveDown_test_entry(self.step)
 
     def load_test(self):
-        print "loading test case into new List Step"
+        print "loading test case into new Suite Step"
         if self._popup != None:
             self._popup.dismiss()
 
@@ -97,14 +97,14 @@ class TestListEntry(StackLayout):
 
     def load_path(self, path, filename):
         self.target_input.text = Utils.get_relative_path(path, filename)
-        self.parent_testlist_view.testSuiteSaved = False
+        self.parent_testsuite_view.testSuiteSaved = False
 
         self._popup.dismiss()
 
     def edit_test(self):
-        if self.parent_testlist_view.my_screen.manager.has_screen('elements'):
+        if self.parent_testsuite_view.my_screen.manager.has_screen('elements'):
             elements_screen = Screen()
-            elements_screen = self.parent_testlist_view.my_screen.manager.get_screen('elements')
+            elements_screen = self.parent_testsuite_view.my_screen.manager.get_screen('elements')
 
             #check existing file
             if os.path.exists(self.target_input.text):                
@@ -113,7 +113,7 @@ class TestListEntry(StackLayout):
                 filename[0] = os.path.abspath(self.target_input.text)
 
                 elements_screen.test_case_view.load(path, filename)
-                self.parent_testlist_view.show_test_case()
+                self.parent_testsuite_view.show_test_case()
             else:
                 # show popup with Warning: file not found
                 alert_text = "File not found at path:\n[b]%d[/b]"%(self.target_input.text)

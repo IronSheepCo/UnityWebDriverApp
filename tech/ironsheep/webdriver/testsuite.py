@@ -2,7 +2,7 @@ import json
 import threading
 from command import Command
 
-class TestListStep:
+class TestSuiteStep:
     def __init__(self):
         self.target = ""
 
@@ -14,12 +14,12 @@ class TestListStep:
 
     @staticmethod
     def loadFromFlattent(flatten):
-        ret = TestListStep()
+        ret = TestSuiteStep()
         ret.target = flatten
 
         return ret
 
-class TestList:
+class TestSuite:
     def __init__(self):
         self.steps = []
         self.running_thread = None
@@ -28,15 +28,15 @@ class TestList:
     def addStep(self, step, index):
         self.steps.insert(index, step)
 
-    def flatten(self, listName):
+    def flatten(self, suiteName):
         ret = {}
-        ret["name"] = listName
+        ret["name"] = suiteName
         ret["test_cases"] = [step.target for step in reversed(self.steps)]
 
         return ret
 
-    def toJson(self, listName):
-        return json.dumps( self.flatten(listName) )
+    def toJson(self, suiteName):
+        return json.dumps( self.flatten(suiteName) )
 
     def _run_blocking(self):
 
@@ -92,10 +92,10 @@ class TestList:
     @staticmethod
     def loadFromJson(json_string):
         dec = json.loads( json_string )
-        ret = TestList()
+        ret = TestSuite()
         
         for step in dec["test_cases"]:
-            st = TestListStep.loadFromFlattent( step )
+            st = TestSuiteStep.loadFromFlattent( step )
             ret.addStep( st, 0 )
 
         return ret

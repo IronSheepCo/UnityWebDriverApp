@@ -15,7 +15,7 @@ class BroadCastReceiver():
     broadcast_message_received = False
     EventOneTimeListener = Queue.Queue()
 
-    Server_list = {}
+    Server_suite = {}
 
     def Listener(self):
         print "Starting Loop:"
@@ -43,22 +43,22 @@ class BroadCastReceiver():
                     counter += 1
 
                 mutex.acquire(True)
-                self.Server_list[addr[0]] = [addr[1], time.time(), name, device_id]
-                print "updating ip in list: " + addr[0]
+                self.Server_suite[addr[0]] = [addr[1], time.time(), name, device_id]
+                print "updating ip in suite: " + addr[0]
                 self.CheckServerExpiration()
                 mutex.release()
 
-    # remove old Server Values from list
+    # remove old Server Values from suite
     def CheckServerExpiration(self):
         t = time.time()
         keys_to_remove = []
 
-        for key in self.Server_list:
-            if t - self.Server_list[key][1] > SERVER_BLACKOUT_TIME:
+        for key in self.Server_suite:
+            if t - self.Server_suite[key][1] > SERVER_BLACKOUT_TIME:
                 keys_to_remove.append(key)
 
         for key in keys_to_remove:
-            self.Server_list.pop(key, None) # remove the value from the dictionary
+            self.Server_suite.pop(key, None) # remove the value from the dictionary
 
     def __init__(self):
         BroadCastReceiver.listening_for_broadcast = True

@@ -104,7 +104,7 @@ class ElementsScreen( Screen ):
         switch to test suite screen
         '''
         self.manager.transition = SlideTransition(direction='left')
-        self.manager.current = 'test_list'
+        self.manager.current = 'test_suite'
 
     def add_to_suite(self):
         '''
@@ -121,11 +121,11 @@ class ElementsScreen( Screen ):
             popup.open()
         else:
             #add test case to current suite
-            if self.manager.has_screen('test_list'):
+            if self.manager.has_screen('test_suite'):
                 suite_screen = Screen()
-                suite_screen = self.manager.get_screen('test_list')
-                step = suite_screen.test_case_list_view.add_test_suite_step()
+                suite_screen = self.manager.get_screen('test_suite')
+                step = suite_screen.test_case_suite_view.add_test_suite_step()
 
-                index = suite_screen.test_case_list_view.test_case_list.steps.index(step)
-                suite_screen.test_case_list_view.test_case_list_stack.children[index].target_input.text = self.test_case_view.test_case_path
+                index = suite_screen.test_case_suite_view.test_case_suite.steps.index(step)
+                suite_screen.test_case_suite_view.test_case_suite_stack.children[index].target_input.text = self.test_case_view.test_case_path
 
