@@ -50,6 +50,9 @@ class TestListView(StackLayout):
     
     def load(self, path, filename):
         content = ""
+        if not filename:            
+            return
+            
         with open( os.path.join(path, filename[0]), "r" ) as stream:
             content = stream.read()
 
@@ -74,7 +77,11 @@ class TestListView(StackLayout):
         self._popup.open()
     
     def save(self, path, filename):
-        newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
+        try:
+            newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
+        except:
+            newFilename = Utils.get_valid_filename(filename)
+
         listName = newFilename
         if len(newFilename) >= 3:
             if newFilename[len(newFilename)-3:] != ".ts":
