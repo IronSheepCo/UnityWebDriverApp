@@ -74,7 +74,7 @@ class TestListView(StackLayout):
         self._popup.open()
     
     def save(self, path, filename):
-        newFilename = Utils.get_valid_filename(filename)
+        newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
         listName = newFilename
         if len(newFilename) >= 3:
             if newFilename[len(newFilename)-3:] != ".ts":
@@ -85,6 +85,8 @@ class TestListView(StackLayout):
             stream.write( self.test_case_list.toJson(listName) )
         self._popup.dismiss()
         self.testSuiteSaved = True
+
+        self.test_case_list_name.text = newFilename[:len(newFilename)-3]
 
     def add_test_suite_step(self):
         print "adding test suite step"
