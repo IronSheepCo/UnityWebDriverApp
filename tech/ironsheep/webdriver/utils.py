@@ -42,6 +42,31 @@ class Utils():
         return re.sub(r'(?u)[^-\w.]', '', s)
 
     @staticmethod
+    def check_file_on_disk(s):
+        """
+        Return true if file exists
+        Return false if not
+        """
+        s = Utils.force_text(s).strip().replace(' ', '_')
+        s = re.sub(r'(?u)[^-\w.\\:]', '', s)
+        
+        if os.path.isfile(s):
+            #print "File Found on Disk"
+            return s
+        else:
+            #print "File Not Found."
+            return ''
+
+    @staticmethod
+    def filter_device_id(val):
+        """
+        """
+        val = Utils.force_text(val).strip().replace(' ', '')
+        val = re.sub(r'(?u)[^\w+]', '', val)
+        return val
+        #'^\w+$'
+
+    @staticmethod
     def get_relative_path(path, filename):
         rel_path = os.path.relpath(path, Command.appDir)
         if rel_path == ".":
