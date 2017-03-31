@@ -62,7 +62,7 @@ class TestCase:
 
                 self.test_case_callback = None
 
-                return False
+                return (False, step)
             else:
                 if self.test_case_callback != None:
                     self.test_case_callback(True, step)
@@ -72,7 +72,7 @@ class TestCase:
 
         self.running_thread = None
         self.test_case_callback = None
-        return True
+        return (True, None)
 
     def run(self, callback=None):
         if callback is None:
