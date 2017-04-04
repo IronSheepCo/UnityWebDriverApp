@@ -10,7 +10,7 @@ from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
 from tech.ironsheep.webdriver.testcase_entry import TestCaseEntry
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 from tech.ironsheep.webdriver.confirmPopup import ConfirmPopup
-from tech.ironsheep.webdriver.utils import Utils
+from tech.ironsheep.webdriver.utils.utils import Utils
 
 class TestCaseView(StackLayout):
     test_case_stack = ObjectProperty(None)

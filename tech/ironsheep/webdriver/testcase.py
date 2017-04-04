@@ -65,7 +65,7 @@ class TestCase:
                 return (False, step)
             else:
                 if self.test_case_callback != None:
-                    self.test_case_callback(True, step)
+                    self.test_case_callback(True, step) # do focus?
 
         if self.test_case_callback != None:
             self.test_case_callback(True, None)
@@ -80,9 +80,9 @@ class TestCase:
             return self._run_blocking()
         else:
             if self.running_thread != None:
-                return 
+                return
 
-            print('running test case on background thread')
+            print 'running test case on background thread'
             self.running_thread = threading.Thread(name="Thread-test case", target=self._run_blocking)
             self.test_case_callback = callback
             self.running_thread.start()

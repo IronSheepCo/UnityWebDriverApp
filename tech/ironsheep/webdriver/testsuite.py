@@ -1,6 +1,9 @@
 import json
 import threading
+
 from command import Command
+from tech.ironsheep.webdriver.utils.utils import Utils
+from tech.ironsheep.webdriver.utils.testCaseUtils import TestCaseUtils
 
 class TestSuiteStep:
     def __init__(self):
@@ -23,7 +26,7 @@ class TestSuite:
     def __init__(self):
         self.steps = []
         self.running_thread = None
-        self.test_case_callback = None
+        self.test_suite_callback = None
     
     def addStep(self, step, index):
         self.steps.insert(index, step)
@@ -39,63 +42,65 @@ class TestSuite:
         return json.dumps( self.flatten(suiteName) )
 
     def _run_blocking(self):
-
-        return 
-        #TODO
-
         step_no = len(self.steps)
-        print 'starting running test case blocking'
+        print 'starting running test suite blocking'
         for step in reversed(self.steps):
             step_no = step_no - 1
 
             step.no = step_no
-            if self.test_case_callback != None:
-                self.test_case_callback(True, step)
+            if self.test_suite_callback != None:
+                self.test_suite_callback(True, step) # this will try to focus on the step item
 
-            result = Command.run_command_no(step.target, step.command, step.arg)
-            if result is False:
+            filePath = Utils.check_file_on_disk(step.target) # == FilePath to TestCase
+            if not filePath:
                 self.running_thread = None
 
-                if self.test_case_callback != None:
-                    self.test_case_callback(False, step)
+                if self.test_suite_callback != None:
+                    self.test_suite_callback(False, step)
 
-                self.test_case_callback = None
-
-                return False
+                self.test_suite_callback = None
+                return (False, step)
             else:
-                if self.test_case_callback != None:
-                    self.test_case_callback(True, step)
+                # run the test case
+                if not TestCaseUtils.DoRunTestCase(filePath):
+                    self.running_thread = None
 
-        if self.test_case_callback != None:
-            self.test_case_callback(True, None)
+                    if self.test_suite_callback != None:
+                        self.test_suite_callback(False, step)
+
+                    self.test_suite_callback = None
+                    return (False, step)
+                else:
+                    if self.test_suite_callback != None:
+                        self.test_suite_callback(True, step) # do focus
+
+        if self.test_suite_callback != None:
+            self.test_suite_callback(True, None)
 
         self.running_thread = None
-        self.test_case_callback = None
-        return True
+        self.test_suite_callback = None
+        return (True, None)
 
     def run(self, callback=None):
-        return
-        #TODO
-
         if callback is None:
-            print 'running test case on main thread'
+            print 'running test suite on main thread'
             return self._run_blocking()
         else:
             if self.running_thread != None:
-                return 
+                return
 
-            print('running test case on background thread')
-            self.running_thread = threading.Thread(name="Thread-test case", target=self._run_blocking)
-            self.test_case_callback = callback
+            print 'running test suite on background thread'
+            self.running_thread = threading.Thread(name="Thread-test sutie", target=self._run_blocking)
+            self.test_suite_callback = callback
             self.running_thread.start()
 
     @staticmethod
     def loadFromJson(json_string):
         dec = json.loads( json_string )
         ret = TestSuite()
-        
+
         for step in dec["test_cases"]:
-            st = TestSuiteStep.loadFromFlattent( step )
-            ret.addStep( st, 0 )
+            st = TestSuiteStep.loadFromFlattent(step)
+            ret.addStep(st, 0)
 
         return ret

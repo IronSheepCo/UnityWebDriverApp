@@ -1,3 +1,4 @@
+from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
@@ -7,27 +8,24 @@ import os
 
 from tech.ironsheep.webdriver.testsuite_entry import TestSuiteEntry
 from tech.ironsheep.webdriver.testsuite import TestSuite, TestSuiteStep
-from tech.ironsheep.webdriver.utils import Utils
+from tech.ironsheep.webdriver.utils.utils import Utils
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 from tech.ironsheep.webdriver.confirmPopup import ConfirmPopup
 from tech.ironsheep.webdriver.command import Config
 
 class TestSuiteView(StackLayout):
-    test_case_suite_name = ObjectProperty(None)
-    test_case_suite_stack = ObjectProperty(None)
+    test_suite_name = ObjectProperty(None)
+    test_suite_stack = ObjectProperty(None)
 
     my_screen = Screen()
 
-    test_case_suite = TestSuite()
+    test_suite = TestSuite()
 
     def __init__(self, **kwargs):
         super(TestSuiteView, self).__init__(**kwargs)
         self.selected_test_suite_entry_index = 0
         self.testSuiteSaved = True
         self._popup = None
-
-    def run_test_case(self):
-        pass
 
     def show_test_case(self):
         self.my_screen.manager.transition = SlideTransition(direction='right')
@@ -59,12 +57,12 @@ class TestSuiteView(StackLayout):
         #clearing existing test case
         self.clear()
 
-        self.test_case_suite = TestSuite.loadFromJson(content)
+        self.test_suite = TestSuite.loadFromJson(content)
 
-        for step in reversed(self.test_case_suite.steps):
+        for step in reversed(self.test_suite.steps):
             self.add_stack_step_view(step)
 
-        self.test_case_suite_name.text = filename[0][filename[0].rindex('\\')+1:]
+        self.test_suite_name.text = filename[0][filename[0].rindex('\\')+1:]
         self.testSuiteSaved = True
 
         self._popup.dismiss()
@@ -93,17 +91,17 @@ class TestSuiteView(StackLayout):
         else:
             newFilename += ".ts"
         with open( os.path.join(path, newFilename), "w" ) as stream:
-            stream.write( self.test_case_suite.toJson(suiteName) )
+            stream.write( self.test_suite.toJson(suiteName) )
         self._popup.dismiss()
         self.testSuiteSaved = True
 
-        self.test_case_suite_name.text = newFilename[:len(newFilename)-3]
+        self.test_suite_name.text = newFilename[:len(newFilename)-3]
 
     def add_test_suite_step(self):
         print "adding test suite step"
         step = TestSuiteStep()
 
-        self.test_case_suite.addStep(step, self.selected_test_suite_entry_index)
+        self.test_suite.addStep(step, self.selected_test_suite_entry_index)
         self.add_test_suite_view(step, self.selected_test_suite_entry_index)
 
         self.testSuiteSaved = False
@@ -117,28 +115,28 @@ class TestSuiteView(StackLayout):
             index = 0
         elif index < 0:
             index = 0
-        elif index >= len(self.test_case_suite_stack.children):
-            index = len(self.test_case_suite_stack.children)-1
+        elif index >= len(self.test_suite_stack.children):
+            index = len(self.test_suite_stack.children)-1
 
-        self.test_case_suite_stack.add_widget(tce, index)
+        self.test_suite_stack.add_widget(tce, index)
 
         tce.load_from_step()
         tce.target_input.focus = True#.move_cursor()
 
     def set_current_step_index(self, step):
-        index = self.test_case_suite.steps.index(step)
+        index = self.test_suite.steps.index(step)
         self.selected_test_suite_entry_index = index
 
     def clear(self):
         print('clearing test case suite')
         nodes = []
-        for node in self.test_case_suite_stack.children:
+        for node in self.test_suite_stack.children:
             nodes.append( node )
         for node in nodes:
-            self.test_case_suite_stack.remove_widget( node )
-            self.test_case_suite.steps.remove(node.step)
+            self.test_suite_stack.remove_widget( node )
+            self.test_suite.steps.remove(node.step)
         self.testSuiteSaved = True
-        self.test_case_suite_name.text = "Current Test Case Suite"
+        self.test_suite_name.text = "Current Test Case Suite"
 
     def add_stack_step_view(self, step, index=None):
         tce = TestSuiteEntry.load()
@@ -148,37 +146,37 @@ class TestSuiteView(StackLayout):
             index = 0
         elif index < 0:
             index = 0
-        elif index >= len(self.test_case_suite_stack.children):
-            index = len(self.test_case_suite_stack.children)-1
+        elif index >= len(self.test_suite_stack.children):
+            index = len(self.test_suite_stack.children)-1
 
-        self.test_case_suite_stack.add_widget(tce, index)
+        self.test_suite_stack.add_widget(tce, index)
 
         tce.load_from_step()
         tce.target_input.focus = True#.move_cursor()
 
     def moveUp_test_entry(self, step):
-        index = self.test_case_suite.steps.index(step)
-        if index < len(self.test_case_suite.steps)-1:
+        index = self.test_suite.steps.index(step)
+        if index < len(self.test_suite.steps)-1:
             self.switch_test_entries(index, index+1)
         else:
             self.switch_test_entries(index, 0)
         self.testSuiteSaved = False
 
     def moveDown_test_entry(self, step):
-        index = self.test_case_suite.steps.index(step)
+        index = self.test_suite.steps.index(step)
         if index > 0:
             self.switch_test_entries(index, index-1)
         else:
-            self.switch_test_entries(index, len(self.test_case_suite.steps)-1)
+            self.switch_test_entries(index, len(self.test_suite.steps)-1)
         self.testSuiteSaved = False
 
     def switch_test_entries(self, index_1, index_2):
-        val1 = self.test_case_suite.steps[index_1]
-        val2 = self.test_case_suite.steps[index_2]
+        val1 = self.test_suite.steps[index_1]
+        val2 = self.test_suite.steps[index_2]
 
-        prevNode = self.test_case_suite_stack.children[index_1]
+        prevNode = self.test_suite_stack.children[index_1]
         prevNode.step = val1
-        currentNode = self.test_case_suite_stack.children[index_2]
+        currentNode = self.test_suite_stack.children[index_2]
         currentNode.step = val2
 
         node_input = prevNode.target_input.text
@@ -186,5 +184,41 @@ class TestSuiteView(StackLayout):
         currentNode.target_input.text = node_input
 
     def run_test_suite(self, instance):
-        pass
+        print( "running test suite")
+        self.test_suite.run(self._test_suite_run_step_result)
+
+    def _test_suite_run_step_result(self, status, info):
+        if status is False:
+            stack_len = len(self.test_suite_stack.children)
+            alert_text = "Test suite failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(stack_len-info.no, info.target)
+
+            alert = Popup(title="Error running test suite",
+                          content=Label(text=alert_text,
+                          halign="center",
+                          markup=True),
+                          size_hint=(0.6, 0.5)
+                         )
+
+            alert.open()
+        else:
+            if info is None:
+                alert_text = "Success"
+                alert = Popup(title="Test suite result",
+                              content=Label(text=alert_text,
+                              halign="center",
+                              markup=True),
+                              size_hint=(0.4, 0.4)
+                             )
+
+                alert.open()
+            else:
+                stack_len = len(self.test_suite_stack.children)
+                node_to_select = self.test_suite_stack.children[info.no]
+
+                #print "try to focus"
+                self.test_suite_stack.children[info.no].on_focus(None, True)
+                if info.no < stack_len-1:
+                    self.test_suite_stack.children[info.no+1].on_focus(None, False)
+
+                self.test_suite_stack.parent.scroll_to(self.test_suite_stack.children[ info.no ])
 

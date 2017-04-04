@@ -79,6 +79,12 @@ class ElementsScreen( Screen ):
     def disconnect_from_app(self, instance):
         self.test_case_view.clear()
 
+        if self.manager.has_screen('test_suite'):
+            suite_screen = Screen()
+            suite_screen = self.manager.get_screen('test_suite')
+            suite_screen.test_suite_view.clear()
+                
+
         print "Try to disconnect"
         #Config.server_ip = "127.0.0.1"
 
@@ -93,6 +99,7 @@ class ElementsScreen( Screen ):
             popup.open()
 
         #slide in the connect interface
+        self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'connect'
 
     def on_enter(self):
@@ -124,8 +131,8 @@ class ElementsScreen( Screen ):
             if self.manager.has_screen('test_suite'):
                 suite_screen = Screen()
                 suite_screen = self.manager.get_screen('test_suite')
-                step = suite_screen.test_case_suite_view.add_test_suite_step()
+                step = suite_screen.test_suite_view.add_test_suite_step()
 
-                index = suite_screen.test_case_suite_view.test_case_suite.steps.index(step)
-                suite_screen.test_case_suite_view.test_case_suite_stack.children[index].target_input.text = self.test_case_view.test_case_path
+                index = suite_screen.test_suite_view.test_suite.steps.index(step)
+                suite_screen.test_suite_view.test_suite_stack.children[index].target_input.text = self.test_case_view.test_case_path
 

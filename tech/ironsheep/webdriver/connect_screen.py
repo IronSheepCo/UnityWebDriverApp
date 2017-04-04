@@ -1,4 +1,4 @@
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen, SlideTransition
 
 
 from kivy.uix.widget import Widget
@@ -83,6 +83,7 @@ class ConnectScreen( Screen ):
             Config.session_id = session_req.json()["sessionId"]
             print("using session id "+Config.session_id)
             
+            self.manager.transition = SlideTransition(direction='left')
             self.manager.current = 'elements'
         except Exception:
             popup = Popup( title="Error", content=Label(text="No server connection at specified ip"), size_hint=(None,None), size=(300,200) )

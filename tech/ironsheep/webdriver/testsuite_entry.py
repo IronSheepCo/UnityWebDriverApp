@@ -13,7 +13,7 @@ import os
 
 from tech.ironsheep.webdriver.command import Command
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
-from tech.ironsheep.webdriver.utils import Utils
+from tech.ironsheep.webdriver.utils.utils import Utils
 
 class TestSuiteEntry(StackLayout):
     target_input = ObjectProperty(None)
@@ -73,8 +73,8 @@ class TestSuiteEntry(StackLayout):
 
     def remove_step(self):
         self.parent.remove_widget(self)
-        self.parent_testsuite_view.test_case_suite.steps.remove(self.step)
-        self.parent_testsuite_view.test_case_suite_stack.remove_widget(self)
+        self.parent_testsuite_view.test_suite.steps.remove(self.step)
+        self.parent_testsuite_view.test_suite_stack.remove_widget(self)
 
     def move_up(self):
         self.parent_testsuite_view.moveUp_test_entry(self.step)
