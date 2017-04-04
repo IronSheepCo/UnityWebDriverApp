@@ -3,14 +3,12 @@ import os
 import socket
 import requests
 
-from tech.ironsheep.webdriver.testcase import TestCase, TestCaseStep
-from tech.ironsheep.webdriver.utils import Utils
 from tech.ironsheep.webdriver.command import Config
-
+from tech.ironsheep.webdriver.utils.utils import Utils
+from tech.ironsheep.webdriver.utils.testCaseUtils import TestCaseUtils
 
 class RunTestCase:
 
-    test_case = TestCase()
     UDP_BROADCAST_PORT = 23923
     UDP_LISTENING_FOR_STRING = "echo for clients"
 
@@ -52,26 +50,11 @@ class RunTestCase:
 
         if self.Listener(deviceID):
             print "Connected to Device ID: ", deviceID #we're good. We have connected to the device
-            #pass 
         else:
-            print "The provided Device ID was not found on the network or We could not connect to it"
+            print "The provided Device ID was not found on the network or could not connect to it"
             return
 
-        content = ""
-        with open(filePath, "r") as stream:
-            content = stream.read()
-
-        self.test_case = TestCase.loadFromJson(content)
-        #print "test case step counter:", len(test_case.steps)
-
-        try:
-            result, step = self.test_case.run()
-            self._test_case_run_step_result(result, step)
-
-        except Exception:
-            self.Disconnect()
-            return
-
+        TestCaseUtils.DoRunTestCase(filePath)
         self.Disconnect()
 
     def Disconnect(self):
@@ -82,21 +65,6 @@ class RunTestCase:
             print delete_session_req.json()
         except Exception:
             pass
-
-
-    def _test_case_run_step_result(self, status, info):
-        if status is False:
-            stack_len = len(self.test_case.steps)
-            alert_text = "Test case failed at [b]step %i[/b] \n Step target: [b]%s[/b]"%(stack_len-info.no, info.target)
-            print alert_text
-        else:
-            if info is None:
-                alert_text = "Success"
-                print alert_text
-            else:
-                pass
-                print info
-                #test_case.steps[info.no]
 
     def Listener(self, device):
         print "Starting Loop:"
