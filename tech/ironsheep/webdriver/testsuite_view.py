@@ -16,6 +16,7 @@ from tech.ironsheep.webdriver.command import Config
 class TestSuiteView(StackLayout):
     test_suite_name = ObjectProperty(None)
     test_suite_stack = ObjectProperty(None)
+    test_suite_path = None
 
     my_screen = Screen()
 
@@ -41,7 +42,16 @@ class TestSuiteView(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        content = LoadDialog(load=self.load, cancel=self.cancel, fileFilter=['*.ts'])
+        if not self.test_suite_path is None:
+            content = LoadDialog(load=self.load,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.ts'],
+                                 pathToLoad=self.test_suite_path)
+        else:
+            content = LoadDialog(load=self.load,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.ts'])
+
         self._popup = Popup(title="Load test suite", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
@@ -62,6 +72,7 @@ class TestSuiteView(StackLayout):
         for step in reversed(self.test_suite.steps):
             self.add_stack_step_view(step)
 
+        self.test_suite_path = Utils.get_relative_path(path, filename[0][filename[0].rindex('\\')+1:])
         self.test_suite_name.text = filename[0][filename[0].rindex('\\')+1:]
         self.testSuiteSaved = True
 
@@ -69,7 +80,17 @@ class TestSuiteView(StackLayout):
 
     def save_test_suite_pressed(self, instance):
         print "saving test suite"
-        content = SaveDialog(save=self.save, cancel=self.cancel, fileFilter = ['*.ts'])
+
+        if not self.test_suite_path is None:
+            content = SaveDialog(save=self.save,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.ts'],
+                                 pathToLoad=self.test_suite_path)
+        else:
+            content = SaveDialog(save=self.save,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.ts'])
+
         self._popup = Popup(title="Save test suite", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
@@ -95,6 +116,8 @@ class TestSuiteView(StackLayout):
         self._popup.dismiss()
         self.testSuiteSaved = True
 
+        self.test_suite_path = Utils.get_relative_path(path, newFilename)
+        print "SUITE PATH: ", self.test_suite_path
         self.test_suite_name.text = newFilename[:len(newFilename)-3]
 
     def add_test_suite_step(self):

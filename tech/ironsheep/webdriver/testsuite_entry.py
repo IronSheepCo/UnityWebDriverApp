@@ -87,7 +87,16 @@ class TestSuiteEntry(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        content = LoadDialog(load=self.load_path, cancel=self.cancel, fileFilter=['*.tc'])
+        if not self.parent_testsuite_view.test_suite_path is None:
+            content = LoadDialog(load=self.load_path,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.tc'],
+                                 pathToLoad=self.parent_testsuite_view.test_suite_path)
+        else:
+            content = LoadDialog(load=self.load_path,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.tc'])
+
         self._popup = Popup(title="Load test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
@@ -98,7 +107,7 @@ class TestSuiteEntry(StackLayout):
     def load_path(self, path, filename):
         self.target_input.text = Utils.get_relative_path(path, filename)
         self.parent_testsuite_view.testSuiteSaved = False
-
+        self.parent_testsuite_view.test_suite_path = Utils.get_relative_path(path, filename[0][filename[0].rindex('\\')+1:])
         self._popup.dismiss()
 
     def edit_test(self):

@@ -74,4 +74,7 @@ class Utils():
         else:
             the_path = os.path.relpath(path, Command.appDir) + filename[0][len(path):]
 
+        if the_path == "":
+            the_path = "."
+
         return the_path

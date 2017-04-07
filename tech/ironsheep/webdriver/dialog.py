@@ -11,9 +11,13 @@ class LoadDialog(FloatLayout):
 
     def __init__(self, **kwargs):
         super(LoadDialog, self).__init__(**kwargs)
-        self.PathToLoad(Command.appDir)
+        
         if "fileFilter" in kwargs:
             self.ChangeFileFilter(kwargs['fileFilter'])
+        if "pathToLoad" in kwargs:
+            self.PathToLoad(kwargs['pathToLoad'])
+        else:
+            self.PathToLoad(Command.appDir)
 
     def PathToLoad(self, path):
         self.filechooser.path = path
@@ -28,10 +32,13 @@ class SaveDialog(FloatLayout):
     filechooser = ObjectProperty(None)    
 
     def __init__(self, **kwargs):
-        super(SaveDialog, self).__init__(**kwargs)
-        self.PathToLoad(Command.appDir)
+        super(SaveDialog, self).__init__(**kwargs)        
         if "fileFilter" in kwargs:
             self.ChangeFileFilter(kwargs['fileFilter'])
+        if "pathToLoad" in kwargs:
+            self.PathToLoad(kwargs['pathToLoad'])
+        else:
+            self.PathToLoad(Command.appDir)
 
     def PathToLoad(self, path):
         self.filechooser.path = path

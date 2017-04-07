@@ -15,7 +15,7 @@ from tech.ironsheep.webdriver.utils.utils import Utils
 class TestCaseView(StackLayout):
     test_case_stack = ObjectProperty(None)
     test_case_name = ObjectProperty(None)
-    test_case_path = None    
+    test_case_path = None
 
     test_case = TestCase()
     #parent_elements_screen 
@@ -62,7 +62,7 @@ class TestCaseView(StackLayout):
         with open(os.path.join(path, newFilename), "w") as stream:
             stream.write(self.test_case.toJson(suitename))
 
-        self.test_case_path = Utils.get_relative_path(path, newFilename)+newFilename
+        self.test_case_path = Utils.get_relative_path(path, newFilename)
         self.test_case_name.text = newFilename
         self.testCaseSaved = True
         if not self._popup is None:
@@ -84,7 +84,7 @@ class TestCaseView(StackLayout):
         for step in reversed(self.test_case.steps):
             self.add_stack_step_view(step)
 
-        self.test_case_path = Utils.get_relative_path(path, filename)
+        self.test_case_path = Utils.get_relative_path(path, filename[0][filename[0].rindex('\\')+1:])
         self.test_case_name.text = filename[0][filename[0].rindex('\\')+1:]
         self.testCaseSaved = True
 
@@ -134,7 +134,15 @@ class TestCaseView(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        content = LoadDialog(load=self.load, cancel=self.cancel, fileFilter=['*.tc'])
+        if not self.test_case_path is None:
+            content = LoadDialog(load=self.load,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.tc'],
+                                 pathToLoad=self.test_case_path)
+        else:
+            content = LoadDialog(load=self.load,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.tc'])
         self._popup = Popup(title="Load test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
@@ -158,7 +166,16 @@ class TestCaseView(StackLayout):
 
     def save_test_pressed(self, instance):
         print "saving test case"
-        content = SaveDialog(save=self.save, cancel=self.cancel, fileFilter = ['*.tc'])
+        if not self.test_case_path is None:
+            content = SaveDialog(save=self.save,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.tc'],
+                                 pathToLoad=self.test_case_path)
+        else:
+            content = SaveDialog(save=self.save,
+                                 cancel=self.cancel,
+                                 fileFilter=['*.tc'])
+
         self._popup = Popup(title="Save test case", content=content,
                             size_hint=(0.8, 0.8))
         self._popup.open()
