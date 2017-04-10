@@ -87,11 +87,11 @@ class TestSuiteEntry(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        if not self.parent_testsuite_view.test_suite_path is None:
+        if not self.parent_testsuite_view.last_loaded_path is None:
             content = LoadDialog(load=self.load_path,
                                  cancel=self.cancel,
                                  fileFilter=['*.tc'],
-                                 pathToLoad=self.parent_testsuite_view.test_suite_path)
+                                 pathToLoad=self.parent_testsuite_view.last_loaded_path)
         else:
             content = LoadDialog(load=self.load_path,
                                  cancel=self.cancel,
@@ -105,9 +105,10 @@ class TestSuiteEntry(StackLayout):
         self._popup.dismiss()
 
     def load_path(self, path, filename):
-        self.target_input.text = Utils.get_relative_path(path, filename)
+        a, self.target_input.text = Utils.get_path_relative_to_path(path, self.parent_testsuite_view.test_suite_path, filename)
         self.parent_testsuite_view.testSuiteSaved = False
-        self.parent_testsuite_view.test_suite_path = Utils.get_relative_path(path, filename[0][filename[0].rindex('\\')+1:])
+        self.parent_testsuite_view.last_loaded_path, a = Utils.get_path_relative_to_app(path, filename)
+
         self._popup.dismiss()
 
     def edit_test(self):
@@ -115,17 +116,20 @@ class TestSuiteEntry(StackLayout):
             elements_screen = Screen()
             elements_screen = self.parent_testsuite_view.my_screen.manager.get_screen('elements')
 
+            new_file = os.path.join(self.parent_testsuite_view.test_suite_path, self.target_input.text)
+            asb_file_path = Utils.get_absolute_path(new_file)
+
             #check existing file
-            if os.path.exists(self.target_input.text):                
-                path = os.path.dirname(os.path.abspath(self.target_input.text))
+            if os.path.isfile(asb_file_path):
                 filename = [2]
-                filename[0] = os.path.abspath(self.target_input.text)
+                filename[0] = asb_file_path
+                path = os.path.dirname(asb_file_path)
 
                 elements_screen.test_case_view.load(path, filename)
                 self.parent_testsuite_view.show_test_case()
             else:
                 # show popup with Warning: file not found
-                alert_text = "File not found at path:\n[b]%d[/b]"%(self.target_input.text)
+                alert_text = "File not found at path:\n[b]%s[/b]"%(self.target_input.text)
                 alert = Popup(title="Warning",
                               content=Label(text=alert_text,
                                             halign="center",

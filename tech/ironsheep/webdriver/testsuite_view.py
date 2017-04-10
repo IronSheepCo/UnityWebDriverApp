@@ -14,9 +14,10 @@ from tech.ironsheep.webdriver.confirmPopup import ConfirmPopup
 from tech.ironsheep.webdriver.command import Config
 
 class TestSuiteView(StackLayout):
-    test_suite_name = ObjectProperty(None)
+    test_suite_name = ObjectProperty(None) # this is the test Suite FileName without the path
     test_suite_stack = ObjectProperty(None)
-    test_suite_path = None
+    test_suite_path = None # this is the folder of the Test Suite File
+    last_loaded_path = None
 
     my_screen = Screen()
 
@@ -42,11 +43,13 @@ class TestSuiteView(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        if not self.test_suite_path is None:
+        print "last_loaded_path=", self.last_loaded_path
+
+        if not self.last_loaded_path is None:
             content = LoadDialog(load=self.load,
                                  cancel=self.cancel,
                                  fileFilter=['*.ts'],
-                                 pathToLoad=self.test_suite_path)
+                                 pathToLoad=self.last_loaded_path)
         else:
             content = LoadDialog(load=self.load,
                                  cancel=self.cancel,
@@ -61,7 +64,7 @@ class TestSuiteView(StackLayout):
         if not filename:
             return
 
-        with open( os.path.join(path, filename[0]), "r" ) as stream:
+        with open(os.path.join(path, Utils.get_filename_from_path(filename[0])), "r") as stream:
             content = stream.read()
 
         #clearing existing test case
@@ -72,8 +75,9 @@ class TestSuiteView(StackLayout):
         for step in reversed(self.test_suite.steps):
             self.add_stack_step_view(step)
 
-        self.test_suite_path = Utils.get_relative_path(path, filename[0][filename[0].rindex('\\')+1:])
-        self.test_suite_name.text = filename[0][filename[0].rindex('\\')+1:]
+        self.test_suite_path, file_path = Utils.get_path_relative_to_app(path, filename)
+        self.last_loaded_path = self.test_suite_path #only for opening FileBrowser on last directory
+        self.test_suite_name.text = Utils.get_filename_from_path(file_path)
         self.testSuiteSaved = True
 
         self._popup.dismiss()
@@ -81,11 +85,11 @@ class TestSuiteView(StackLayout):
     def save_test_suite_pressed(self, instance):
         print "saving test suite"
 
-        if not self.test_suite_path is None:
+        if not self.last_loaded_path is None:
             content = SaveDialog(save=self.save,
                                  cancel=self.cancel,
                                  fileFilter=['*.ts'],
-                                 pathToLoad=self.test_suite_path)
+                                 pathToLoad=self.last_loaded_path)
         else:
             content = SaveDialog(save=self.save,
                                  cancel=self.cancel,
@@ -96,29 +100,29 @@ class TestSuiteView(StackLayout):
         self._popup.open()
 
     def save(self, path, filename):
-        try: #remove all illegal characters.
-            newFilename = Utils.get_valid_filename(filename[filename.rindex('\\')+1:])
-        except: #rindex will throw an exception if the string searched was not found.
-            newFilename = Utils.get_valid_filename(filename)
+        #remove all illegal characters.
+        new_filename = Utils.get_valid_filename(Utils.get_filename_from_path(filename))
 
-        #if the user tries to save the file with no name, or the name of just the extension, we return. (no saving)
-        if len(newFilename) == 0 or newFilename==".ts": 
+        #if the user tries to save the file with no name,
+        #or the name of just the extension, we return. (no saving)
+        if len(new_filename) == 0 or new_filename == ".ts":
             return
 
-        suiteName = newFilename
-        if len(newFilename) >= 3:
-            if newFilename[len(newFilename)-3:] != ".ts":
-                newFilename += ".ts"
+        suite_name = new_filename
+        if len(new_filename) >= 3:
+            if new_filename[len(new_filename)-3:] != ".ts":
+                new_filename += ".ts"
         else:
-            newFilename += ".ts"
-        with open( os.path.join(path, newFilename), "w" ) as stream:
-            stream.write( self.test_suite.toJson(suiteName) )
+            new_filename += ".ts"
+        with open(os.path.join(path, new_filename), "w") as stream:
+            stream.write(self.test_suite.toJson(suite_name))
+
         self._popup.dismiss()
         self.testSuiteSaved = True
 
-        self.test_suite_path = Utils.get_relative_path(path, newFilename)
-        print "SUITE PATH: ", self.test_suite_path
-        self.test_suite_name.text = newFilename[:len(newFilename)-3]
+        self.test_suite_path, file_path = Utils.get_path_relative_to_app(path, new_filename)
+        self.last_loaded_path = self.test_suite_path #only for opening FileBrowser on last directory
+        self.test_suite_name.text = new_filename
 
     def add_test_suite_step(self):
         print "adding test suite step"

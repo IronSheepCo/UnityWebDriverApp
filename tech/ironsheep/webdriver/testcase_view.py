@@ -62,7 +62,7 @@ class TestCaseView(StackLayout):
         with open(os.path.join(path, newFilename), "w") as stream:
             stream.write(self.test_case.toJson(suitename))
 
-        self.test_case_path = Utils.get_relative_path(path, newFilename)
+        rel_path, self.test_case_path = Utils.get_path_relative_to_app(path, newFilename)
         self.test_case_name.text = newFilename
         self.testCaseSaved = True
         if not self._popup is None:
@@ -84,13 +84,13 @@ class TestCaseView(StackLayout):
         for step in reversed(self.test_case.steps):
             self.add_stack_step_view(step)
 
-        self.test_case_path = Utils.get_relative_path(path, filename[0][filename[0].rindex('\\')+1:])
+        rel_path, self.test_case_path = Utils.get_path_relative_to_app(path, filename)
         self.test_case_name.text = filename[0][filename[0].rindex('\\')+1:]
         self.testCaseSaved = True
 
         if not self._popup is None:
             self._popup.dismiss()
-        
+
     def _test_case_run_step_result(self, status, info):
         if status is False:
             stack_len = len(self.test_case_stack.children)

@@ -67,14 +67,36 @@ class Utils():
         #'^\w+$'
 
     @staticmethod
-    def get_relative_path(path, filename):
-        rel_path = os.path.relpath(path, Command.appDir)
+    def get_path_relative_to_app(path, filename):
+        return Utils.get_path_relative_to_path(path, Command.appDir, filename)
+
+    @staticmethod
+    def get_path_relative_to_path(path1, path2, filename):
+        if path2 is None:
+            return Utils.get_path_relative_to_app(path1, filename)
+
+        rel_path = os.path.relpath(path1, path2)
         if rel_path == ".":
-            the_path = filename[0][len(path)+1:]
+            filePath = Utils.get_filename_from_path(filename[0])
         else:
-            the_path = os.path.relpath(path, Command.appDir) + filename[0][len(path):]
+            filePath = rel_path + "\\" + Utils.get_filename_from_path(filename[0])
 
-        if the_path == "":
-            the_path = "."
+        if filePath == "":
+            filePath = "."
 
-        return the_path
+        return rel_path, filePath
+
+
+
+    @staticmethod
+    def get_filename_from_path(path):
+        try:
+            filename = path[path.rindex('\\')+1:]
+        except Exception as ex:
+            filename = path
+
+        return filename
+
+    @staticmethod
+    def get_absolute_path(path):
+        return Command.appDir + "\\" + path
