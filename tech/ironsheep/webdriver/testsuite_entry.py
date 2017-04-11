@@ -87,11 +87,11 @@ class TestSuiteEntry(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        if not self.parent_testsuite_view.last_loaded_path is None:
+        if not Utils.get_last_loaded_path() is None:
             content = LoadDialog(load=self.load_path,
                                  cancel=self.cancel,
                                  fileFilter=['*.tc'],
-                                 pathToLoad=self.parent_testsuite_view.last_loaded_path)
+                                 pathToLoad=Utils.get_last_loaded_path())
         else:
             content = LoadDialog(load=self.load_path,
                                  cancel=self.cancel,
@@ -107,8 +107,8 @@ class TestSuiteEntry(StackLayout):
     def load_path(self, path, filename):
         a, self.target_input.text = Utils.get_path_relative_to_path(path, self.parent_testsuite_view.test_suite_path, filename)
         self.parent_testsuite_view.testSuiteSaved = False
-        self.parent_testsuite_view.last_loaded_path, a = Utils.get_path_relative_to_app(path, filename)
-
+        rel_path, b = Utils.get_path_relative_to_app(path, filename)
+        Utils.set_last_loaded_path(rel_path)
         self._popup.dismiss()
 
     def edit_test(self):
@@ -125,7 +125,9 @@ class TestSuiteEntry(StackLayout):
                 filename[0] = asb_file_path
                 path = os.path.dirname(asb_file_path)
 
-                elements_screen.test_case_view.load(path, filename)
+                elements_screen.test_case_view.load(path=path,
+                                                    filename=filename,
+                                                    dontSaveFilePath=True)
                 self.parent_testsuite_view.show_test_case()
             else:
                 # show popup with Warning: file not found

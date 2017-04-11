@@ -8,6 +8,9 @@ from tech.ironsheep.webdriver.command import Command
 _PROTECTED_TYPES = (type(None), int, float, Decimal, datetime.datetime, datetime.date, datetime.time)
 class Utils():
 
+    # the last Loaded Path by file browser
+    last_loaded_path = None
+
     @staticmethod
     def force_text(s, encoding='utf-8', strings_only=False, errors='strict'):
         """
@@ -100,3 +103,11 @@ class Utils():
     @staticmethod
     def get_absolute_path(path):
         return Command.appDir + "\\" + path
+
+    @staticmethod
+    def set_last_loaded_path(path):
+        Utils.last_loaded_path = Utils.get_absolute_path(path)
+
+    @staticmethod
+    def get_last_loaded_path():
+        return Utils.last_loaded_path

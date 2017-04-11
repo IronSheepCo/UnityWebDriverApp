@@ -62,13 +62,16 @@ class TestCaseView(StackLayout):
         with open(os.path.join(path, newFilename), "w") as stream:
             stream.write(self.test_case.toJson(suitename))
 
-        rel_path, self.test_case_path = Utils.get_path_relative_to_app(path, newFilename)
+        self.test_case_path, full_name = Utils.get_path_relative_to_app(path, newFilename)
         self.test_case_name.text = newFilename
         self.testCaseSaved = True
+
+        Utils.set_last_loaded_path(self.test_case_path)
+
         if not self._popup is None:
             self._popup.dismiss()
 
-    def load(self, path, filename):
+    def load(self, path, filename, **kwargs):
         content = ""
         if not filename:
             return
@@ -84,9 +87,14 @@ class TestCaseView(StackLayout):
         for step in reversed(self.test_case.steps):
             self.add_stack_step_view(step)
 
-        rel_path, self.test_case_path = Utils.get_path_relative_to_app(path, filename)
-        self.test_case_name.text = filename[0][filename[0].rindex('\\')+1:]
+        self.test_case_path, full_name = Utils.get_path_relative_to_app(path, filename)
+        self.test_case_name.text = Utils.get_filename_from_path(full_name)
         self.testCaseSaved = True
+
+        if "dontSaveFilePath" in kwargs:
+            pass
+        else:
+            Utils.set_last_loaded_path(self.test_case_path)
 
         if not self._popup is None:
             self._popup.dismiss()
@@ -134,11 +142,11 @@ class TestCaseView(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        if not self.test_case_path is None:
+        if not Utils.get_last_loaded_path() is None:
             content = LoadDialog(load=self.load,
                                  cancel=self.cancel,
                                  fileFilter=['*.tc'],
-                                 pathToLoad=self.test_case_path)
+                                 pathToLoad=Utils.get_last_loaded_path())
         else:
             content = LoadDialog(load=self.load,
                                  cancel=self.cancel,
@@ -166,11 +174,11 @@ class TestCaseView(StackLayout):
 
     def save_test_pressed(self, instance):
         print "saving test case"
-        if not self.test_case_path is None:
+        if not Utils.get_last_loaded_path() is None:
             content = SaveDialog(save=self.save,
                                  cancel=self.cancel,
                                  fileFilter=['*.tc'],
-                                 pathToLoad=self.test_case_path)
+                                 pathToLoad=Utils.get_last_loaded_path())
         else:
             content = SaveDialog(save=self.save,
                                  cancel=self.cancel,

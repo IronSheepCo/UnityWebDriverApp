@@ -17,7 +17,6 @@ class TestSuiteView(StackLayout):
     test_suite_name = ObjectProperty(None) # this is the test Suite FileName without the path
     test_suite_stack = ObjectProperty(None)
     test_suite_path = None # this is the folder of the Test Suite File
-    last_loaded_path = None
 
     my_screen = Screen()
 
@@ -43,13 +42,11 @@ class TestSuiteView(StackLayout):
         if self._popup != None:
             self._popup.dismiss()
 
-        print "last_loaded_path=", self.last_loaded_path
-
-        if not self.last_loaded_path is None:
+        if not Utils.get_last_loaded_path() is None:
             content = LoadDialog(load=self.load,
                                  cancel=self.cancel,
                                  fileFilter=['*.ts'],
-                                 pathToLoad=self.last_loaded_path)
+                                 pathToLoad=Utils.get_last_loaded_path())
         else:
             content = LoadDialog(load=self.load,
                                  cancel=self.cancel,
@@ -76,7 +73,7 @@ class TestSuiteView(StackLayout):
             self.add_stack_step_view(step)
 
         self.test_suite_path, file_path = Utils.get_path_relative_to_app(path, filename)
-        self.last_loaded_path = self.test_suite_path #only for opening FileBrowser on last directory
+        Utils.set_last_loaded_path(self.test_suite_path) #only for opening FileBrowser on last directory
         self.test_suite_name.text = Utils.get_filename_from_path(file_path)
         self.testSuiteSaved = True
 
@@ -85,11 +82,11 @@ class TestSuiteView(StackLayout):
     def save_test_suite_pressed(self, instance):
         print "saving test suite"
 
-        if not self.last_loaded_path is None:
+        if not Utils.get_last_loaded_path() is None:
             content = SaveDialog(save=self.save,
                                  cancel=self.cancel,
                                  fileFilter=['*.ts'],
-                                 pathToLoad=self.last_loaded_path)
+                                 pathToLoad=Utils.get_last_loaded_path())
         else:
             content = SaveDialog(save=self.save,
                                  cancel=self.cancel,
@@ -121,7 +118,8 @@ class TestSuiteView(StackLayout):
         self.testSuiteSaved = True
 
         self.test_suite_path, file_path = Utils.get_path_relative_to_app(path, new_filename)
-        self.last_loaded_path = self.test_suite_path #only for opening FileBrowser on last directory
+        #only for opening FileBrowser on last directory:
+        Utils.set_last_loaded_path(self.test_suite_path)
         self.test_suite_name.text = new_filename
 
     def add_test_suite_step(self):
