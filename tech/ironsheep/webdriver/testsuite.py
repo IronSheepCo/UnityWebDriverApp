@@ -1,5 +1,6 @@
 import json
 import threading
+import os
 
 from command import Command
 from tech.ironsheep.webdriver.utils.utils import Utils
@@ -27,6 +28,7 @@ class TestSuite:
         self.steps = []
         self.running_thread = None
         self.test_suite_callback = None
+        self.test_suite_path = None
     
     def addStep(self, step, index):
         self.steps.insert(index, step)
@@ -46,13 +48,17 @@ class TestSuite:
         print 'starting running test suite blocking'
         for step in reversed(self.steps):
             step_no = step_no - 1
-
             step.no = step_no
             if self.test_suite_callback != None:
                 self.test_suite_callback(True, step) # this will try to focus on the step item
 
-            filePath = Utils.check_file_on_disk(step.target) # == FilePath to TestCase
-            if not filePath:
+            new_file = os.path.join(self.test_suite_path, step.target)
+            asb_file_path = Utils.get_absolute_path(new_file)
+
+
+            file_path = Utils.check_file_on_disk(asb_file_path) # == FilePath to TestCases
+            if not file_path:
+                print "File Not Found!"
                 self.running_thread = None
 
                 if self.test_suite_callback != None:
@@ -62,7 +68,7 @@ class TestSuite:
                 return (False, step)
             else:
                 # run the test case
-                if not TestCaseUtils.DoRunTestCase(filePath):
+                if not TestCaseUtils.DoRunTestCase(file_path):
                     self.running_thread = None
 
                     if self.test_suite_callback != None:

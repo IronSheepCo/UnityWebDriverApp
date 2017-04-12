@@ -1,4 +1,7 @@
-from tech.ironsheep.webdriver.testsuite import TestSuite, TestSuiteStep
+import os
+
+from tech.ironsheep.webdriver.testsuite import TestSuite
+from tech.ironsheep.webdriver.utils.utils import Utils
 
 class TestSuiteUtils():
 
@@ -6,11 +9,15 @@ class TestSuiteUtils():
     def DoRunTestSuite(filePath):
         content = ""
         test_suite = TestSuite()
+
         with open(filePath, "r") as stream:
             content = stream.read()
 
         test_suite = TestSuite.loadFromJson(content)
-        #print "test suite step counter:", len(test_suite.steps)
+
+        dir_path = os.path.dirname(filePath)
+        file_name = Utils.get_filename_from_path(filePath)
+        test_suite.test_suite_path, f = Utils.get_path_relative_to_app(dir_path, file_name)
 
         try:
             result, step = test_suite.run()

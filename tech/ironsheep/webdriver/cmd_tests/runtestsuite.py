@@ -12,7 +12,10 @@ class RunTestSuite:
     UDP_BROADCAST_PORT = 23923
     UDP_LISTENING_FOR_STRING = "echo for clients"
 
-    def main(self, argv):
+    def RunWithParams(self, device_id, file_path):
+        self.Run(device_id, file_path)
+
+    def RunWithArgs(self, argv):
         filePath = ""
         deviceID = ""
         try:
@@ -27,12 +30,15 @@ class RunTestSuite:
             elif opt in ['-i', "--id", "--deviceID"]:
                 deviceID = arg
 
-        filePath = Utils.check_file_on_disk(filePath)
-        deviceID = Utils.filter_device_id(deviceID)
+        self.Run(deviceID, filePath)
+
+    def Run(self, device_id, file_path):
+        filePath = Utils.check_file_on_disk(file_path)
+        deviceID = Utils.filter_device_id(device_id)
 
         if not filePath:
             print "Invalid Test Suite Path or File Not Found"
-            print 'runtestsuite.py --path <path to test suite> --id <unique device ID>'
+            #print 'runtestsuite.py --path <path to test suite> --id <unique device ID>'
             return
         else:
             #print 'path is :', filePath
@@ -40,7 +46,7 @@ class RunTestSuite:
 
         if not deviceID:
             print "Invalid Device ID or Parameter Not Found"
-            print 'runtestsuite.py --path <path to test case> --id <unique device ID>'
+            #print 'runtestsuite.py --path <path to test case> --id <unique device ID>'
             return
         else:
             #print 'device ID is :', deviceID
@@ -50,7 +56,6 @@ class RunTestSuite:
 
         if self.Listener(deviceID):
             print "Connected to Device ID: ", deviceID #we're good. We have connected to the device
-            #pass 
         else:
             print "The provided Device ID was not found on the network or We could not connect to it"
             return
@@ -124,4 +129,4 @@ class RunTestSuite:
 
 
 if __name__ == "__main__":
-    RunTestSuite().main(sys.argv[1:])
+    RunTestSuite().RunWithArgs(sys.argv[1:])

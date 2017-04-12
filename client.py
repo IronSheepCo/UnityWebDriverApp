@@ -43,6 +43,10 @@ from tech.ironsheep.webdriver.connect_entry import ConnectEntry
 from tech.ironsheep.webdriver.treeview_text_input import TreeViewTextInput
 from tech.ironsheep.webdriver.dialog import LoadDialog, SaveDialog
 
+from tech.ironsheep.webdriver.utils.startup_utils import StartUpUtils
+from tech.ironsheep.webdriver.cmd_tests.runtestcase import RunTestCase
+from tech.ironsheep.webdriver.cmd_tests.runtestsuite import RunTestSuite
+
 class WebDriverApp(App):
     def build(self):
 
@@ -67,18 +71,34 @@ Factory.register('LoadDialog', cls=LoadDialog)
 Factory.register('SaveDialog', cls=SaveDialog)
 
 if __name__ == '__main__':
-    Command.appDir = os.path.dirname(os.path.realpath(__file__))    
-    BroadCastReceiver() #start UDP client - move it on the Connect Button ?
-    try:
-        #catch unhandled exception
-        WebDriverApp().run()
-    except Exception as e:
-        print("Stoping beacause of uncaught exception")
-        print(e)
-        print(traceback.print_exc())
-        #allow app to finish gracefully
-        #usually useful for closing 
-        #the current web driver session
-        App.get_running_app().stop()
+    Command.appDir = os.path.dirname(os.path.realpath(__file__))
+    run_silent = False
+
+    if len(sys.argv)>1:
+        device_id = None
+        path = None
+        run_type = None
+        device_id, path, run_type = StartUpUtils.ParseParameters(sys.argv[1:])        
+        if not device_id is None and not path is None and not run_type is None:
+            if run_type.lower() == "case":
+                RunTestCase().RunWithParams(device_id, path)
+                run_silent = True
+            else:
+                RunTestSuite().RunWithParams(device_id, path)
+                run_silent = True
+
+    if run_silent is False:
+        BroadCastReceiver() #start UDP client - move it on the Connect Button ?
+        try:
+            #catch unhandled exception
+            WebDriverApp().run()
+        except Exception as e:
+            print("Stoping beacause of uncaught exception")
+            print(e)
+            print(traceback.print_exc())
+            #allow app to finish gracefully
+            #usually useful for closing 
+            #the current web driver session
+            App.get_running_app().stop()
 
 

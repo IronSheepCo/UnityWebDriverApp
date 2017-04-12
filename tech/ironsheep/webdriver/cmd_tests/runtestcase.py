@@ -12,7 +12,10 @@ class RunTestCase:
     UDP_BROADCAST_PORT = 23923
     UDP_LISTENING_FOR_STRING = "echo for clients"
 
-    def main(self, argv):
+    def RunWithParams(self, device_id, file_path):
+        self.Run(device_id, file_path)
+
+    def RunWithArgs(self, argv):
         filePath = ""
         deviceID = ""
         try:
@@ -27,12 +30,15 @@ class RunTestCase:
             elif opt in ['-i', "--id", "--deviceID"]:
                 deviceID = arg
 
-        filePath = Utils.check_file_on_disk(filePath)
-        deviceID = Utils.filter_device_id(deviceID)
+        self.Run(deviceID, filePath)
+
+    def Run(self, device_id, file_path):
+        filePath = Utils.check_file_on_disk(file_path)
+        deviceID = Utils.filter_device_id(device_id)
 
         if not filePath:
             print "Invalid Test Case Path or File Not Found"
-            print 'runtestcase.py --path <path to test case> --id <unique device ID>'
+            #print 'runtestcase.py --path <path to test case> --id <unique device ID>'
             return
         else:
             #print 'path is :', filePath
@@ -40,7 +46,7 @@ class RunTestCase:
 
         if not deviceID:
             print "Invalid Device ID or Parameter Not Found"
-            print 'runtestcase.py --path <path to test case> --id <unique device ID>'
+            #print 'runtestcase.py --path <path to test case> --id <unique device ID>'
             return
         else:
             #print 'device ID is :', deviceID
@@ -71,7 +77,7 @@ class RunTestCase:
         device_connected = False
 
         serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        serverSock.bind(('', self.UDP_BROADCAST_PORT))
+        serverSock.bind(('', RunTestCase.UDP_BROADCAST_PORT))
 
         while device_connected is False:
             serverSock.settimeout(1.0)
@@ -80,7 +86,7 @@ class RunTestCase:
             except socket.timeout:
                 continue
             #print "Message: ", data, addr
-            if self.UDP_LISTENING_FOR_STRING in data:
+            if RunTestCase.UDP_LISTENING_FOR_STRING in data:
                 val = data.split("+++")
                 name = ""
                 device_id = ""
@@ -123,4 +129,4 @@ class RunTestCase:
 
 
 if __name__ == "__main__":
-    RunTestCase().main(sys.argv[1:])
+    RunTestCase().RunWithArgs(sys.argv[1:])

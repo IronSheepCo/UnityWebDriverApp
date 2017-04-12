@@ -16,10 +16,8 @@ from tech.ironsheep.webdriver.command import Config
 class TestSuiteView(StackLayout):
     test_suite_name = ObjectProperty(None) # this is the test Suite FileName without the path
     test_suite_stack = ObjectProperty(None)
-    test_suite_path = None # this is the folder of the Test Suite File
 
     my_screen = Screen()
-
     test_suite = TestSuite()
 
     def __init__(self, **kwargs):
@@ -71,9 +69,9 @@ class TestSuiteView(StackLayout):
 
         for step in reversed(self.test_suite.steps):
             self.add_stack_step_view(step)
-
-        self.test_suite_path, file_path = Utils.get_path_relative_to_app(path, filename)
-        Utils.set_last_loaded_path(self.test_suite_path) #only for opening FileBrowser on last directory
+        
+        self.test_suite.test_suite_path, file_path = Utils.get_path_relative_to_app(path, filename)
+        Utils.set_last_loaded_path(self.test_suite.test_suite_path) #only for opening FileBrowser on last directory
         self.test_suite_name.text = Utils.get_filename_from_path(file_path)
         self.testSuiteSaved = True
 
@@ -117,9 +115,9 @@ class TestSuiteView(StackLayout):
         self._popup.dismiss()
         self.testSuiteSaved = True
 
-        self.test_suite_path, file_path = Utils.get_path_relative_to_app(path, new_filename)
+        self.test_suite.test_suite_path, file_path = Utils.get_path_relative_to_app(path, new_filename)
         #only for opening FileBrowser on last directory:
-        Utils.set_last_loaded_path(self.test_suite_path)
+        Utils.set_last_loaded_path(self.test_suite.test_suite_path)
         self.test_suite_name.text = new_filename
 
     def add_test_suite_step(self):
