@@ -135,5 +135,13 @@ class ElementsScreen( Screen ):
                 step = suite_screen.test_suite_view.add_test_suite_step()
 
                 index = suite_screen.test_suite_view.test_suite.steps.index(step)
-                rel_path, file_path = Utils.get_path_relative_to_path(self.test_case_view.test_case_path, suite_screen.test_suite_view.test_suite.test_suite_path, [self.test_case_view.test_case_name.text])
+
+                abs_old_path = Utils.get_absolute_path(self.test_case_view.test_case_path)
+
+                if suite_screen.test_suite_view.test_suite.test_suite_path is None:
+                    abs_new_path = Utils.get_absolute_path("")
+                else:
+                    abs_new_path = Utils.get_absolute_path(suite_screen.test_suite_view.test_suite.test_suite_path)
+
+                rel_path, file_path = Utils.get_path_relative_to_path(abs_old_path, abs_new_path, [self.test_case_view.test_case_name.text])
                 suite_screen.test_suite_view.test_suite_stack.children[index].target_input.text = file_path
