@@ -11,6 +11,7 @@ import json
 
 from tech.ironsheep.webdriver.command import Config, Command, webelement_key_id
 from tech.ironsheep.webdriver.treeview_text_input import TreeViewTextInput
+from tech.ironsheep.webdriver.utils.utils import Utils
 
 class ElementsScreen( Screen ):
     label = ObjectProperty(None)
@@ -134,5 +135,5 @@ class ElementsScreen( Screen ):
                 step = suite_screen.test_suite_view.add_test_suite_step()
 
                 index = suite_screen.test_suite_view.test_suite.steps.index(step)
-                suite_screen.test_suite_view.test_suite_stack.children[index].target_input.text = self.test_case_view.test_case_path
-
+                rel_path, file_path = Utils.get_path_relative_to_path(self.test_case_view.test_case_path, suite_screen.test_suite_view.test_suite.test_suite_path, [self.test_case_view.test_case_name.text])
+                suite_screen.test_suite_view.test_suite_stack.children[index].target_input.text = file_path
