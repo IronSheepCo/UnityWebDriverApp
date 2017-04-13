@@ -105,7 +105,7 @@ class TestSuiteEntry(StackLayout):
         self._popup.dismiss()
 
     def load_path(self, path, filename):
-        a, self.target_input.text = Utils.get_path_relative_to_path(path, self.parent_testsuite_view.test_suite_path, filename)
+        a, self.target_input.text = Utils.get_path_relative_to_path(path, self.parent_testsuite_view.test_suite.test_suite_path, filename)
         self.parent_testsuite_view.testSuiteSaved = False
         rel_path, b = Utils.get_path_relative_to_app(path, filename)
         Utils.set_last_loaded_path(rel_path)
@@ -116,7 +116,7 @@ class TestSuiteEntry(StackLayout):
             elements_screen = Screen()
             elements_screen = self.parent_testsuite_view.my_screen.manager.get_screen('elements')
 
-            new_file = os.path.join(self.parent_testsuite_view.test_suite_path, self.target_input.text)
+            new_file = os.path.join(self.parent_testsuite_view.test_suite.test_suite_path, self.target_input.text)
             asb_file_path = Utils.get_absolute_path(new_file)
 
             #check existing file
