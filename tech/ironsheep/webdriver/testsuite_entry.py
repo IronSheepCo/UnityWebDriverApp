@@ -116,7 +116,10 @@ class TestSuiteEntry(StackLayout):
             elements_screen = Screen()
             elements_screen = self.parent_testsuite_view.my_screen.manager.get_screen('elements')
 
-            new_file = os.path.join(self.parent_testsuite_view.test_suite.test_suite_path, self.target_input.text)
+            if self.parent_testsuite_view.test_suite.test_suite_path is None:
+                new_file = self.target_input.text
+            else:
+                new_file = os.path.join(self.parent_testsuite_view.test_suite.test_suite_path, self.target_input.text)
             asb_file_path = Utils.get_absolute_path(new_file)
 
             #check existing file
