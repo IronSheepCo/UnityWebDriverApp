@@ -116,6 +116,8 @@ class TestSuiteEntry(StackLayout):
             elements_screen = Screen()
             elements_screen = self.parent_testsuite_view.my_screen.manager.get_screen('elements')
 
+            print "Test Suite Path=", self.parent_testsuite_view.test_suite.test_suite_path
+
             if self.parent_testsuite_view.test_suite.test_suite_path is None:
                 new_file = self.target_input.text
             else:

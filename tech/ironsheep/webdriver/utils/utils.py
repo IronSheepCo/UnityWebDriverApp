@@ -89,7 +89,9 @@ class Utils():
 
         return rel_path, filePath
 
-
+    @staticmethod
+    def get_directory_from_path(path):
+        return os.path.dirname(path)
 
     @staticmethod
     def get_filename_from_path(path):

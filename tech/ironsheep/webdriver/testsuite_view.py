@@ -73,7 +73,7 @@ class TestSuiteView(StackLayout):
         self.test_suite.test_suite_path, file_path = Utils.get_path_relative_to_app(path, filename)
         Utils.set_last_loaded_path(self.test_suite.test_suite_path) #only for opening FileBrowser on last directory
         self.test_suite_name.text = Utils.get_filename_from_path(file_path)
-        self.testSuiteSaved = True
+        self.testSuiteSaved = True        
 
         self._popup.dismiss()
 
@@ -109,13 +109,24 @@ class TestSuiteView(StackLayout):
                 new_filename += ".ts"
         else:
             new_filename += ".ts"
+
+        print "path=", path, " new_filename=", new_filename
+
+        temp_path, file_path = Utils.get_path_relative_to_app(path, new_filename)
+
+        #print "temp_path=", temp_path, " self.test_suite.test_suite_path=", self.test_suite.test_suite_path
+
+
+        self.UpdateStepsPath(self.test_suite.test_suite_path, temp_path)
+        #self.test_suite.updateStepsPath(self.test_suite.test_suite_path, temp_path)
+
         with open(os.path.join(path, new_filename), "w") as stream:
             stream.write(self.test_suite.toJson(suite_name))
 
         self._popup.dismiss()
         self.testSuiteSaved = True
-
-        self.test_suite.test_suite_path, file_path = Utils.get_path_relative_to_app(path, new_filename)
+        
+        self.test_suite.test_suite_path = temp_path
         #only for opening FileBrowser on last directory:
         Utils.set_last_loaded_path(self.test_suite.test_suite_path)
         self.test_suite_name.text = new_filename
@@ -244,4 +255,22 @@ class TestSuiteView(StackLayout):
                     self.test_suite_stack.children[info.no+1].on_focus(None, False)
 
                 self.test_suite_stack.parent.scroll_to(self.test_suite_stack.children[ info.no ])
+
+    def UpdateStepsPath(self, old_suite_path, new_suite_path):
+        for i, node in enumerate(self.test_suite_stack.children):
+            step_value = node.target_input.text
+            if old_suite_path is None:
+                joined_dir = Utils.get_directory_from_path(step_value)
+                abs_old_path = Utils.get_absolute_path(joined_dir)
+                abs_new_path = Utils.get_absolute_path(new_suite_path)
+                dir_value, step_value = Utils.get_path_relative_to_path(abs_old_path, abs_new_path, [step_value])
+                node.target_input.text = step_value
+            else:
+                joined_dir = os.path.join(old_suite_path, step_value)
+                abs_old_path = Utils.get_absolute_path(joined_dir)
+                abs_old_path_dir = Utils.get_directory_from_path(abs_old_path)
+                abs_new_path = Utils.get_absolute_path(new_suite_path)
+
+                dir_value, step_value = Utils.get_path_relative_to_path(abs_old_path_dir, abs_new_path, [step_value])
+                node.target_input.text = step_value
 
