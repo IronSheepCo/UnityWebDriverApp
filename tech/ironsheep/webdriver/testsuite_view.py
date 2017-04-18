@@ -171,6 +171,7 @@ class TestSuiteView(StackLayout):
             self.test_suite.steps.remove(node.step)
         self.testSuiteSaved = True
         self.test_suite_name.text = "Current Test Case Suite"
+        self.test_suite.test_suite_path = None
 
     def add_stack_step_view(self, step, index=None):
         tce = TestSuiteEntry.load()

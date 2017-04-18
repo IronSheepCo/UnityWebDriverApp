@@ -52,8 +52,11 @@ class TestSuite:
             if self.test_suite_callback != None:
                 self.test_suite_callback(True, step) # this will try to focus on the step item
 
-            new_file = os.path.join(self.test_suite_path, step.target)
-            asb_file_path = Utils.get_absolute_path(new_file)
+            if self.test_suite_path is None:
+                asb_file_path = Utils.get_absolute_path(step.target)
+            else:
+                new_file = os.path.join(self.test_suite_path, step.target)
+                asb_file_path = Utils.get_absolute_path(new_file)
 
 
             file_path = Utils.check_file_on_disk(asb_file_path) # == FilePath to TestCases
